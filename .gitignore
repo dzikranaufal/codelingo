@@ -1,0 +1,30 @@
+
+# Dependencies
+frontend/node_modules/
+
+# Build outputs
+frontend/dist/
+backend/bin/
+backend/tmp/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Go test outputs
+coverage.out
+*.test
