@@ -1,0 +1,452 @@
+/* frontend/src/pages/LandingPage.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap");
+
+.landing {
+  --green: #58cc02;
+  --green-dark: #58a700;
+  --blue: #1cb0f6;
+  --navy: #1b1745;
+  --ink: #3c3c3c;
+  --muted: #777;
+  --line: #e5e5e5;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: #fff;
+  overflow-x: hidden;
+}
+.landing *,
+.landing *::before,
+.landing *::after {
+  box-sizing: border-box;
+}
+.landing h1,
+.landing h2,
+.landing h3,
+.landing p,
+.landing ul {
+  margin: 0;
+}
+.landing ul {
+  padding: 0;
+  list-style: none;
+}
+.landing a {
+  color: inherit;
+  text-decoration: none;
+}
+.landing :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* ---------- Tombol ---------- */
+.btn {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  padding: 14px 20px;
+  border: 2px solid var(--line);
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.8px;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.btn--primary {
+  background: var(--green);
+  border-color: var(--green-dark);
+  color: #fff !important;
+}
+.btn--ghost,
+.btn--outline {
+  background: #fff;
+  color: var(--blue) !important;
+}
+.btn--outline {
+  width: auto;
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 28px;
+}
+.btn--light {
+  background: #fff;
+  color: var(--navy) !important;
+  width: auto;
+  display: inline-block;
+  padding: 12px 28px;
+}
+.btn--inline {
+  margin: 24px auto 0;
+}
+
+/* ---------- Header ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--green) !important;
+  letter-spacing: -0.5px;
+}
+.logo__mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--green);
+  color: #fff;
+  font-size: 14px;
+}
+/* Dipakai hanya jika logo di header diganti <img> */
+.logo__img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+.locale {
+  border: 0;
+  background: none;
+  font: 800 12px "Nunito", sans-serif;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.hero__art {
+  position: relative;
+  min-height: 300px;
+  display: grid;
+  place-items: center;
+}
+.hero__blob {
+  width: 260px;
+  height: 260px;
+  display: grid;
+  place-items: center;
+  font-size: 120px;
+  border-radius: 62% 38% 55% 45% / 50% 55% 45% 50%;
+  background: #e5f8d4; /* ganti ke "transparent" kalau tidak mau lingkaran hijau */
+}
+.hero__logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+.chip {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  font-weight: 900;
+  color: #fff;
+}
+.chip--a { top: 10%; left: 8%; background: var(--blue); transform: rotate(-12deg); }
+.chip--b { top: 6%; right: 12%; background: #ff9600; transform: rotate(10deg); }
+.chip--c { bottom: 8%; left: 18%; background: #ce82ff; transform: rotate(8deg); }
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.hero__copy h1 {
+  margin-bottom: 14px;
+  font-size: 28px;
+  line-height: 1.3;
+  font-weight: 800;
+  text-align: center;
+  max-width: 380px;
+}
+
+/* ---------- Strip ---------- */
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  border-top: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
+}
+.strip ul {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 36px;
+  overflow-x: auto;
+  padding: 18px 0;
+  scrollbar-width: none;
+}
+.strip li {
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.strip__arrow {
+  border: 0;
+  background: none;
+  font-size: 24px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ---------- Fitur ---------- */
+.feature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 48px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 90px 24px;
+}
+.feature__copy {
+  max-width: 400px;
+  justify-self: center;
+}
+.feature--reverse .feature__copy {
+  order: 2;
+}
+.feature h2,
+.final h2,
+.promo h2 {
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 900;
+  color: var(--green);
+  margin-bottom: 14px;
+}
+.feature p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  font-weight: 700;
+}
+.art {
+  justify-self: center;
+  width: 240px;
+  height: 240px;
+  display: grid;
+  place-items: center;
+  font-size: 96px;
+  border-radius: 48% 52% 42% 58% / 52% 44% 56% 48%;
+}
+.art--green { background: #e5f8d4; }
+.art--blue { background: #d7f0ff; }
+.art--orange { background: #ffeccc; }
+.art--purple { background: #f1e1ff; }
+/* Ukuran logo di section uji kemampuan */
+.art__logo {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+/* ---------- Belajar kapan pun ---------- */
+.anywhere {
+  position: relative;
+  padding: 90px 24px 40px;
+  text-align: center;
+}
+.anywhere h2 {
+  font-size: 40px;
+  line-height: 1.25;
+  font-weight: 900;
+  color: var(--navy);
+}
+.stores {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+.store {
+  padding: 8px 18px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  text-align: left;
+}
+.store small {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.phones {
+  position: relative;
+  height: 420px;
+  margin-top: 30px;
+}
+.phone {
+  position: absolute;
+  width: 130px;
+  height: 250px;
+  border: 8px solid var(--navy);
+  border-radius: 24px;
+  background: linear-gradient(160deg, #d7f0ff, #fff);
+}
+.phone--m { left: 50%; top: 20px; transform: translateX(-50%) rotate(-14deg); }
+.phone--l { left: 12%; top: -60px; transform: rotate(-30deg); background: #e5f8d4; }
+.phone--r { right: 12%; top: 60px; transform: rotate(8deg); }
+.float {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #f1e1ff;
+  font-size: 26px;
+}
+.float--1 { left: 8%; top: 190px; background: #ffeccc; }
+.float--2 { left: 58%; top: 10px; background: #fff3b0; }
+.float--3 { right: 8%; top: 20px; font-weight: 900; color: var(--blue); background: #d7f0ff; }
+
+/* ---------- Promo gelap ---------- */
+.promo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 90px 24px;
+  background: var(--navy);
+}
+.promo__art {
+  display: grid;
+  place-items: center;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: #2b2570;
+  font-size: 100px;
+}
+.promo__logo {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+.promo h2 {
+  color: #7cf24a;
+  font-style: italic;
+}
+
+/* ---------- CTA akhir ---------- */
+.final {
+  position: relative;
+  padding: 80px 24px 0;
+  text-align: center;
+  background: #fff;
+}
+.final .btn {
+  position: relative;
+  z-index: 1;
+}
+.final__field {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  height: 240px;
+  margin-top: 40px;
+  padding-top: 90px;
+  font-size: 48px;
+  background: var(--green);
+  overflow: hidden;
+}
+.final__field::before {
+  content: "";
+  position: absolute;
+  top: -140px;
+  left: -20%;
+  width: 140%;
+  height: 220px;
+  border-radius: 50%;
+  background: #fff;
+}
+.final__field span {
+  position: relative;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 40px 40px 50px;
+  background: var(--green);
+  color: #fff;
+}
+.footer__cols {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.footer h3 {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 900;
+}
+.footer li {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+.footer__langs {
+  max-width: 1000px;
+  margin: 36px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---------- Responsif (taruh paling bawah) ---------- */
+@media (max-width: 800px) {
+  .topbar { padding: 16px 20px; }
+  .locale { display: none; }
+  .hero,
+  .feature { grid-template-columns: 1fr; text-align: center; padding-top: 50px; padding-bottom: 50px; }
+  .feature--reverse .feature__copy { order: 0; }
+  .hero { padding-bottom: 50px; }
+  .strip ul { justify-content: flex-start; }
+  .promo { flex-direction: column; gap: 30px; text-align: center; }
+  .anywhere h2 { font-size: 30px; }
+  .phone--l { left: 2%; }
+  .phone--r { right: 2%; }
+  .footer__cols { grid-template-columns: repeat(2, 1fr); }
+}
