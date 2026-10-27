@@ -1,3 +1,4 @@
+
 package config
 
 import (
@@ -13,31 +14,38 @@ type Config struct {
 	DBUser     string
 	DBPassword string
 	DBName     string
+	ServerPort string
+	JWTSecret  string
 }
 
-// Load membaca file .env (jika ada) lalu environment variables.
 func Load() Config {
-	_ = godotenv.Load() // .env bersifat opsional
+	_ = godotenv.Load()
 
 	return Config{
 		DBHost:     getEnv("DB_HOST", "127.0.0.1"),
 		DBPort:     getEnv("DB_PORT", "3306"),
 		DBUser:     getEnv("DB_USER", "root"),
-		DBPassword: getEnv("DB_PASSWORD", ""),
+		DBPassword: os.Getenv("DB_PASSWORD"),
 		DBName:     getEnv("DB_NAME", "codelingo"),
+		ServerPort: getEnv("SERVER_PORT", "8080"),
+		JWTSecret:  os.Getenv("JWT_SECRET"),
 	}
 }
 
 func (c Config) DSN() string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		c.DBUser, c.DBPassword, c.DBHost, c.DBPort, c.DBName,
+		c.DBUser,
+		c.DBPassword,
+		c.DBHost,
+		c.DBPort,
+		c.DBName,
 	)
 }
 
 func getEnv(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
+	if value := os.Getenv(key); value != "" {
+		return value
 	}
 	return fallback
 }

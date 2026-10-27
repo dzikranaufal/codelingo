@@ -32,7 +32,9 @@ func All() []interface{} {
 type User struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
 	Name      string    `gorm:"size:100;not null" json:"name"`
+	Username  string    `gorm:"size:30;not null;uniqueIndex" json:"username"`
 	Email     string    `gorm:"size:100;not null;uniqueIndex" json:"email"`
+	Age       int       `gorm:"not null" json:"age"`
 	Password  string    `gorm:"size:255;not null" json:"-"`
 	Role      string    `gorm:"size:20;not null;default:user;index" json:"role"`
 	XP        int       `gorm:"not null;default:0;check:chk_users_xp,xp >= 0" json:"xp"`
@@ -41,6 +43,7 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
 
 // LearningPath (ERD: Learning_Path).
 type LearningPath struct {
