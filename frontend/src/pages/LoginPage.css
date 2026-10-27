@@ -1,0 +1,148 @@
+.login-page {
+  min-height: 100vh;
+  background: #fff;
+  color: #3c3c3c;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.login-close {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #afafaf;
+  cursor: pointer;
+}
+.login-close:hover { color: #777; }
+
+.login-signup {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: auto;
+  padding: 0 24px;
+  color: #1cb0f6;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 375px;
+  margin-top: 56px;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+.login-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  margin-bottom: 12px;
+  background: #f7f7f7;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+}
+.login-input:focus { border-color: #1cb0f6; }
+
+.password-wrapper { position: relative; }
+.forgot-btn {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  background: none;
+  border: none;
+  color: #afafaf;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+}
+.forgot-btn:hover { color: #777; }
+
+.login-error {
+  color: #ea2b2b;
+  font-size: 14px;
+  margin: 0 0 12px;
+}
+
+/* Tombol bergaya 3D seperti Duolingo */
+.btn {
+  width: 100%;
+  height: 48px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+.btn:disabled { cursor: not-allowed; opacity: 0.6; }
+
+.btn-primary {
+  background: #1cb0f6;
+  color: #fff;
+  border-bottom: 4px solid #1899d6;
+  margin-top: 12px;
+}
+.btn-primary:hover:not(:disabled) { background: #3dbcf8; }
+
+.btn-outline {
+  background: #fff;
+  border: 2px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+}
+.btn-google   { color: #4285f4; }
+.btn-facebook { color: #3b5998; }
+.btn-apple    { color: #3c3c3c; }
+.btn-facebook svg { color: #3b5998; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #afafaf;
+  font-weight: 800;
+  font-size: 14px;
+  margin: 20px 0;
+}
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: #e5e5e5;
+}
+
+.login-terms {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 13px;
+  color: #afafaf;
+  line-height: 1.6;
+}
+.login-terms strong { color: #777; }
+
+@media (max-width: 480px) {
+  .login-container { margin-top: 80px; }
+  .login-close { top: 16px; left: 16px; }
+  .login-signup { top: 12px; right: 16px; }
+}
