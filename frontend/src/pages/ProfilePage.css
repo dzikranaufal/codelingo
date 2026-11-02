@@ -1,0 +1,115 @@
+.profile-page {
+  --primary: #58cc02;
+  --primary-dark: #46a302;
+  --border: #e5e5e5;
+  --muted: #777;
+  --light: #afafaf;
+  --danger: #ea2b2b;
+  --text: #3c3c3c;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  color: var(--text);
+  text-align: left;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.profile-page *,
+.profile-state * {
+  box-sizing: border-box;
+}
+
+/* ---------- Banner dan info ---------- */
+.profile-banner {
+  height: 200px;
+  border-radius: 20px;
+  background: #ddf4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profile-avatar {
+  height: 170px;
+  width: auto;
+  object-fit: contain;
+}
+
+.profile-info {
+  margin-top: 20px;
+}
+
+.profile-name,
+.profile-heading {
+  font-weight: 700;
+  letter-spacing: normal;
+  line-height: 1.2;
+}
+
+.profile-name {
+  font-size: 28px;
+  margin: 0;
+}
+
+.profile-email {
+  color: var(--light);
+  margin: 4px 0;
+}
+
+.profile-joined {
+  margin: 4px 0;
+}
+
+.profile-divider {
+  border: none;
+  border-top: 2px solid var(--border);
+  margin: 24px 0;
+}
+
+.profile-heading {
+  font-size: 22px;
+  margin: 24px 0 16px;
+}
+
+/* ---------- Statistik ---------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  text-align: left;
+}
+
+.stat-icon {
+  font-size: 24px;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.stat-label {
+  margin: 0;
+  color: var(--light);
+  font-size: 15px;
+}
+
+/* ---------- Achievements ---------- */
+.empty-card {
+  border: 2px
