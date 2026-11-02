@@ -1,0 +1,192 @@
+/* frontend/src/components/Sidebar.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap");
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-shrink: 0;
+  width: 256px;
+  height: 100vh;
+  padding: 20px 14px;
+  overflow-y: auto;
+  border-right: 2px solid #e5e5e5;
+  background: #fff;
+  box-sizing: border-box;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Logo dan nama di atas */
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #58cc02;
+}
+.sidebar__logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+/* Daftar menu */
+.sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tiap menu adalah <button>, jadi gaya bawaan browser di-reset dulu */
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #4b4b4b;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sidebar__item:hover {
+  background: #f7f7f7;
+}
+.sidebar__item:focus-visible {
+  outline: 3px solid #1cb0f6;
+  outline-offset: 2px;
+}
+
+/* Menu aktif (biru) */
+.sidebar__item--active,
+.sidebar__item--active:hover {
+  background: #ddf4ff;
+  border-color: #84d8ff;
+  color: #1cb0f6;
+}
+
+/* ---------- Ikon ---------- */
+.sidebar__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: 24px;
+}
+/* Karakter: huruf besar berwarna biru */
+.sidebar__icon--kana {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1cb0f6;
+}
+/* Profil: lingkaran putus-putus */
+.sidebar__icon--round {
+  border: 2px dashed #afafaf;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 800;
+  color: #afafaf;
+}
+.sidebar__item--active .sidebar__icon--round {
+  border-color: #1cb0f6;
+  color: #1cb0f6;
+}
+/* Lainnya: lingkaran ungu */
+.sidebar__icon--purple {
+  border-radius: 50%;
+  background: #ce82ff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+/* ---------- Kartu promo ---------- */
+.sidebar__promo {
+  margin-top: auto; /* turun ke bawah kalau sidebar masih punya ruang */
+  padding: 20px 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  text-align: center;
+}
+.sidebar__promo-icon {
+  font-size: 36px;
+}
+.sidebar__promo h3 {
+  margin: 8px 0 6px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #3c3c3c;
+}
+.sidebar__promo p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #777;
+}
+.sidebar__promo-btn {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #1cb0f6;
+  cursor: pointer;
+}
+.sidebar__promo-btn:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Layar kecil: sidebar pindah ke bawah, hanya ikon ---------- */
+@media (max-width: 800px) {
+  .sidebar {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    padding: 6px 8px;
+    overflow: visible;
+    border-top: 2px solid #e5e5e5;
+    border-right: 0;
+  }
+  .sidebar__brand,
+  .sidebar__label,
+  .sidebar__promo {
+    display: none;
+  }
+  .sidebar nav {
+    flex: 1;
+  }
+  .sidebar__list {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .sidebar__item {
+    width: auto;
+    padding: 8px;
+  }
+}

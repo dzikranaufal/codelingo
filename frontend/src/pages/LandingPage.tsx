@@ -84,7 +84,7 @@ export default function LandingPage() {
         </div>
         <div className="hero__copy">
           <h1>Cara paling seru untuk belajar coding, logika, dan lainnya!</h1>
-          <Link to="/register" className="btn btn--primary">
+          <Link to="/belajar" className="btn btn--primary">
             Mulai
           </Link>
           <Link to="/login" className="btn btn--ghost">
@@ -156,7 +156,7 @@ export default function LandingPage() {
         </div>
         <div className="promo__copy">
           <h2>naik level lebih cepat</h2>
-          <Link to="/register" className="btn btn--light">
+          <Link to="/belajar" className="btn btn--light">
             Coba tantangan
           </Link>
         </div>
@@ -170,7 +170,7 @@ export default function LandingPage() {
             Kuis singkat kami membantumu mengetahui seberapa jauh kemampuan codingmu, lalu
             menyarankan level yang tepat untuk memulai.
           </p>
-          <Link to="/register" className="btn btn--outline">
+          <Link to="/belajar" className="btn btn--outline">
             Mulai kuis
           </Link>
         </div>
@@ -183,7 +183,7 @@ export default function LandingPage() {
       {/* CTA akhir */}
       <section className="final">
         <h2>belajar coding dengan codelingo</h2>
-        <Link to="/register" className="btn btn--primary btn--inline">
+        <Link to="/belajar" className="btn btn--primary btn--inline">
           Mulai
         </Link>
         <div className="final__field" aria-hidden="true">
