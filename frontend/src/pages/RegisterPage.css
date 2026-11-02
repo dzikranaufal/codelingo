@@ -1,0 +1,334 @@
+/* frontend/src/pages/RegisterPage.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap");
+
+.register {
+  position: relative;
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+  background: #fff;
+  box-sizing: border-box;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color: #3c3c3c;
+}
+.register *,
+.register *::before,
+.register *::after {
+  box-sizing: border-box;
+}
+
+/* Pojok kiri atas (X atau panah kembali) */
+.register__corner {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  color: #afafaf;
+  text-decoration: none;
+  cursor: pointer;
+}
+.register__corner:hover {
+  color: #777;
+}
+
+/* Pojok kanan atas (tombol Masuk) */
+.register__switch {
+  position: absolute;
+  top: 36px;
+  right: 40px;
+  padding: 12px 24px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  color: #1cb0f6;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.register__switch:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Kotak konten di tengah */
+.register__box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+.register__box--center {
+  align-items: stretch;
+  padding-top: 40px;
+}
+.register__box h1 {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.5;
+  color: #3c3c3c;
+}
+
+/* Input usia */
+.register__field {
+  position: relative;
+}
+.register__input {
+  width: 100%;
+  height: 54px;
+  padding: 0 56px 0 20px;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  background: #f7f7f7;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  color: #3c3c3c;
+}
+.register__input::placeholder {
+  color: #777;
+}
+.register__input:focus {
+  outline: none;
+  border-color: #1cb0f6;
+  background: #fff;
+}
+.register__clear {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 50%;
+  background: #afafaf;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.register__hint {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #777;
+}
+.register__hint a {
+  color: #1cb0f6;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* Tombol Berikutnya */
+.register__next {
+  height: 54px;
+  margin-top: 8px;
+  border: 0;
+  border-bottom: 4px solid #58a700;
+  border-radius: 16px;
+  background: #58cc02;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.register__next:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+/* Tombol nonaktif: abu-abu seperti di gambar */
+.register__next:disabled {
+  border-bottom-width: 0;
+  background: #e5e5e5;
+  color: #afafaf;
+  cursor: not-allowed;
+}
+
+/* Pemisah "Atau" */
+.register__divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0;
+  color: #afafaf;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.register__divider::before,
+.register__divider::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: #e5e5e5;
+}
+
+/* Tombol sosial berdampingan */
+.register__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.register__social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 54px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.register__social:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.register__social-icon {
+  font-size: 22px;
+  font-weight: 900;
+}
+.register__social--google { color: #4285f4; }
+.register__social--google .register__social-icon { color: #ea4335; }
+.register__social--facebook { color: #3b5998; }
+.register__social--facebook .register__social-icon { color: #3b5998; }
+
+.register__terms {
+  margin: 24px 0 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #afafaf;
+}
+.register__terms strong {
+  color: #777;
+}
+
+/* ---------- Langkah 2: gambar ---------- */
+.register__art {
+  position: relative;
+  height: 340px;
+  margin: 8px auto 0;
+  width: 330px;
+  max-width: 100%;
+}
+.register__logo {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  width: 170px;
+  height: 170px;
+  object-fit: contain;
+}
+.register__phone {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* Tombol pilihan cara daftar */
+.register__method {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 54px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  background: #fff;
+  color: #1cb0f6;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.register__method:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.register__method-icon {
+  font-size: 22px;
+  font-weight: 900;
+}
+.register__method-icon--google { color: #ea4335; }
+.register__method-icon--facebook { color: #3b5998; }
+.register__method-icon--email { color: #a560e8; }
+
+/* Layar kecil */
+@media (max-width: 800px) {
+  .register__corner {
+    top: 20px;
+    left: 20px;
+  }
+  .register__switch {
+    top: 16px;
+    right: 16px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .register__box {
+    padding-top: 56px;
+  }
+  .register__box h1 {
+    font-size: 24px;
+  }
+}
+/* Ukuran logo Google & Facebook (gambar PNG) */
+.register__icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+/* Animasi slide masuk tiap langkah */
+.register {
+  overflow-x: hidden;
+}
+.register__slide {
+  animation: register-slide-in 0.3s ease-out;
+}
+@keyframes register-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .register__slide {
+    animation: none;
+  }
+}
