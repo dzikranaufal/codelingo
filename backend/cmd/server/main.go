@@ -12,6 +12,8 @@ import (
 	"codelingo/backend/internal/auth"
 	"codelingo/backend/internal/config"
 	"codelingo/backend/internal/database"
+	"codelingo/backend/internal/middleware"
+    "codelingo/backend/internal/profile"
 
 	"gorm.io/gorm"
 )
@@ -53,6 +55,10 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/v1/auth/register", handler.Register)
 	mux.HandleFunc("/api/v1/auth/login", handler.Login)
+	    authenticate := middleware.Authenticate(db, []byte(cfg.JWTSecret))
+    profileHandler := &profile.Handler{Service: &profile.Service{DB: db}}
+    mux.Handle("/api/v1/profile", authenticate(http.HandlerFunc(profileHandler.Profile)))
+    mux.Handle("/api/v1/profile/password", authenticate(http.HandlerFunc(profileHandler.Password)))
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -101,7 +107,7 @@ func cors(next http.Handler) http.Handler {
 		if allowedOrigins[origin] {
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Add("Vary", "Origin")
-			w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, OPTIONS")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		}
 
