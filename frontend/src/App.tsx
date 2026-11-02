@@ -1,12 +1,12 @@
-// frontend/src/App.tsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+﻿// frontend/src/App.tsx
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ProfilePage from "./pages/ProfilePage";
 import Sidebar from "./components/Sidebar";
 
-// SEMENTARA: halaman untuk memamerkan component Sidebar.
-// Sidebar di kiri, area konten di kanan masih kosong (dikerjakan nanti).
+// Halaman preview Sidebar.
 function SidebarPreview() {
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -24,6 +24,8 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/belajar" element={<SidebarPreview />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
