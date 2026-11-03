@@ -107,31 +107,6 @@
 .btn-primary:hover:not(:disabled) { background: #3dbcf8; }
 
 .btn-outline {
-  background: #fff;
-  border: 2px solid #e5e5e5;
-  border-bottom: 4px solid #e5e5e5;
-}
-.btn-google   { color: #4285f4; }
-.btn-facebook { color: #3b5998; }
-.btn-apple    { color: #3c3c3c; }
-.btn-facebook svg { color: #3b5998; }
-
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: #afafaf;
-  font-weight: 800;
-  font-size: 14px;
-  margin: 20px 0;
-}
-.divider::before, .divider::after {
-  content: "";
-  flex: 1;
-  height: 2px;
-  background: #e5e5e5;
-}
-
 .login-terms {
   margin-top: 28px;
   text-align: center;
@@ -145,4 +120,47 @@
   .login-container { margin-top: 80px; }
   .login-close { top: 16px; left: 16px; }
   .login-signup { top: 12px; right: 16px; }
+}
+
+
+/* Layout width fixes */
+.login-page .login-input,
+.login-page .btn {
+  box-sizing: border-box;
+}
+
+.login-page .login-signup {
+  width: fit-content;
+}
+
+
+/* LOGIN BUTTON FORCE FIX */
+.login-page .login-container form {
+  width: 100%;
+}
+
+.login-page .login-container form .login-input {
+  display: block;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.login-page .login-container form button.btn-primary {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.login-page button.login-signup {
+  position: absolute !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
+  display: inline-flex !important;
+  padding-left: 24px;
+  padding-right: 24px;
+  right: 16px;
 }

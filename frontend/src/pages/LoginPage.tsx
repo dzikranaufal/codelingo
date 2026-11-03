@@ -2,8 +2,6 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook, FaApple } from "react-icons/fa";
 import { login } from "../services/authService";
 import "./LoginPage.css";
 
@@ -27,7 +25,7 @@ export default function LoginPage() {
     try {
       const data = await login({ identifier: identifier.trim(), password });
       localStorage.setItem("token", data.token);
-      navigate("/"); // sementara; ganti ke /dashboard saat halamannya ada
+      navigate("/profile", { replace: true });
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (!err.response) {
@@ -88,18 +86,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="divider"><span>OR</span></div>
+        
 
         {/* Social login belum ada endpoint backend, jadi sementara disabled */}
-        <button type="button" className="btn btn-outline btn-google" disabled>
-          <FcGoogle size={22} /> SIGN IN WITH GOOGLE
-        </button>
-        <button type="button" className="btn btn-outline btn-facebook" disabled>
-          <FaFacebook size={22} /> SIGN IN WITH FACEBOOK
-        </button>
-        <button type="button" className="btn btn-outline btn-apple" disabled>
-          <FaApple size={22} /> SIGN IN WITH APPLE
-        </button>
+        
+        
+        
 
         <p className="login-terms">
           By signing in to CodeLingo, you agree to our <strong>Terms</strong> and{" "}

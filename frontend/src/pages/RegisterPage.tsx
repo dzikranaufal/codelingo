@@ -2,8 +2,6 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FcGoogle } from "react-icons/fc";
-import { FaApple } from "react-icons/fa";
 import { register } from "../services/authService";
 import "./LoginPage.css"; // dipakai ulang untuk gaya tombol, input, dll
 import "./RegisterPage.css";
@@ -67,7 +65,7 @@ export default function RegisterPage() {
         password,
       });
       localStorage.setItem("token", data.token);
-      navigate("/"); // sementara; ganti ke /dashboard saat halamannya ada
+      navigate("/profile", { replace: true });
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (!err.response) {
@@ -141,16 +139,12 @@ export default function RegisterPage() {
               <button type="submit" className="btn btn-primary">NEXT</button>
             </form>
 
-            <div className="divider"><span>OR</span></div>
+            
 
             {/* Belum ada backend OAuth, jadi sementara disabled */}
             <div className="social-row">
-              <button type="button" className="btn btn-outline btn-google" disabled>
-                <FcGoogle size={22} /> GOOGLE
-              </button>
-              <button type="button" className="btn btn-outline btn-apple" disabled>
-                <FaApple size={22} /> APPLE
-              </button>
+              
+              
             </div>
           </>
         ) : (
