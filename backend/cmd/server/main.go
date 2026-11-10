@@ -14,6 +14,8 @@ import (
 	"codelingo/backend/internal/database"
 	"codelingo/backend/internal/middleware"
     "codelingo/backend/internal/profile"
+	"codelingo/backend/internal/leaderboard"
+	// "codelingo/backend/internal/content"
 
 	"gorm.io/gorm"
 )
@@ -59,6 +61,12 @@ func main() {
     profileHandler := &profile.Handler{Service: &profile.Service{DB: db}}
     mux.Handle("/api/v1/profile", authenticate(http.HandlerFunc(profileHandler.Profile)))
     mux.Handle("/api/v1/profile/password", authenticate(http.HandlerFunc(profileHandler.Password)))
+	leaderboardHandler := &leaderboard.Handler{Service: &leaderboard.Service{DB: db}}
+	//contentHandler := &content.Handler{Service: &content.Service{DB: db}}
+    //mux.Handle("/api/v1/learning-paths", authenticate(http.HandlerFunc(contentHandler.Paths)))
+    //mux.Handle("/api/v1/learning-paths/", authenticate(http.HandlerFunc(contentHandler.PathLessons)))
+    //mux.Handle("/api/v1/lessons/", authenticate(http.HandlerFunc(contentHandler.LessonDetail)))
+    mux.Handle("/api/v1/leaderboard", authenticate(http.HandlerFunc(leaderboardHandler.List)))
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
