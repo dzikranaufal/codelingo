@@ -25,6 +25,8 @@ func All() []interface{} {
 		&QuizAttempt{},
 		&Achievement{},
 		&UserAchievement{},
+		&Language{},
+		&UserLanguage{},
 	}
 }
 
@@ -50,6 +52,9 @@ type LearningPath struct {
 	ID          uint      `gorm:"primaryKey" json:"id"`
 	Name        string    `gorm:"size:100;not null" json:"name"`
 	Description string    `gorm:"type:text" json:"description"`
+		LanguageID  *uint     `gorm:"index" json:"language_id"`
+	OrderIndex  int       `gorm:"not null;default:1" json:"order_index"`
+	Language    *Language `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT" json:"-"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -70,6 +75,7 @@ type LearningPathLesson struct {
 	LearningPathID uint `gorm:"primaryKey;autoIncrement:false" json:"learning_path_id"`
 	LessonID       uint `gorm:"primaryKey;autoIncrement:false" json:"lesson_id"`
 	OrderIndex     int  `gorm:"not null;default:0" json:"order_index"`
+	
 
 	LearningPath LearningPath `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
 	Lesson       Lesson       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
@@ -97,8 +103,11 @@ type Question struct {
 	LessonID     uint      `gorm:"not null;index" json:"lesson_id"`
 	QuestionText string    `gorm:"type:text;not null" json:"question_text"`
 	QuestionType string    `gorm:"size:50;not null" json:"question_type"`
+	XPReward    int    `gorm:"not null;default:10" json:"xp_reward"`
+	Explanation string `gorm:"type:text" json:"explanation"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
+	
 
 	Lesson Lesson `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
 }

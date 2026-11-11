@@ -19,5 +19,12 @@ func main() {
 		log.Fatalf("migrasi gagal: %v", err)
 	}
 
+	if err := database.EnsureLanguages(db); err != nil {
+		log.Fatalf("seed bahasa gagal: %v", err)
+	}
+	if err := database.Backfill(db); err != nil {
+		log.Fatalf("backfill gagal: %v", err)
+	}
+
 	log.Println("migrasi selesai")
 }
