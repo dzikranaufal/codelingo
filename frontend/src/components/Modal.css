@@ -1,0 +1,60 @@
+/* frontend/src/components/Modal.css */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+}
+.modal__box {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 18px;
+  background: #fff;
+  color: #3c3c3c;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.modal__head {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 18px;
+  border-bottom: 2px solid #e5e5e5;
+}
+.modal__head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #777;
+}
+.modal__x,
+.modal__close {
+  border: 0;
+  background: none;
+  color: #afafaf;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.modal__x:hover,
+.modal__close:hover {
+  color: #777;
+}
+.modal__x {
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  transform: translateY(-50%);
+}
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 1;
+}

@@ -1,11 +1,12 @@
-export interface Profile {
+﻿export interface Profile {
   id: number;
   username: string;
+  name: string;
   email: string;
-  created_at?: string;
-  // Field di bawah belum tentu sudah disediakan backend, jadi dibuat opsional
-  total_xp?: number;
+  age: number;
+  role: string;
+  xp: number;
+  level: number;
+  lives: number;
   streak?: number;
-  hearts?: number;
-  level?: number;
 }

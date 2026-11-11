@@ -1,0 +1,265 @@
+/* frontend/src/components/LessonPath.css */
+
+/* ---------- Wadah halaman ---------- */
+.learn {
+  min-height: 100vh;
+  background: #fff; /* putih penuh, supaya tidak ikut latar gelap bawaan */
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color: #3c3c3c;
+}
+.learn *,
+.learn *::before,
+.learn *::after {
+  box-sizing: border-box;
+}
+.learn__inner {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 16px 100px;
+}
+
+/* ---------- Banner unit ---------- */
+.unit--green  { --unit: #58cc02; --unit-edge: #58a700; }
+.unit--blue   { --unit: #1cb0f6; --unit-edge: #1899d6; }
+.unit--purple { --unit: #ce82ff; --unit-edge: #a560e8; }
+
+.unit {
+  margin-bottom: 40px;
+}
+.unit__banner {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 36px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--unit);
+  color: #fff;
+}
+.unit__section {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.unit__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+}
+.unit__guide {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ---------- Jalur pelajaran ---------- */
+.path {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.path__row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.path__row--current {
+  margin-top: 48px; /* ruang untuk gelembung "Mulai" */
+}
+
+/* Gelembung "Mulai" di atas pelajaran aktif */
+.path__bubble {
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: var(--unit);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.path__bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--unit);
+}
+
+/* Logo CodeLingo di samping node (pengganti burung hijau) */
+.path__mascot {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 90px);
+  width: 110px;
+  height: 110px;
+  transform: translateY(-50%);
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ---------- Node berbentuk koin pipih ---------- */
+.path-node {
+  --face: var(--unit);
+  --edge: var(--unit-edge);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ikon selalu tepat di tengah koin */
+  width: 76px;
+  height: 68px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--face);
+  box-shadow: 0 8px 0 var(--edge); /* ketebalan koin */
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ukuran ikon centang dan bintang: tidak besar, tidak kecil */
+.path-node svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
+
+/* Belum selesai: abu-abu dengan bintang */
+.path-node--locked {
+  --face: #e5e5e5;
+  --edge: #b7b7b7;
+  color: #b7b7b7;
+}
+
+/* Selesai: hijau polos dengan centang, apa pun warna unitnya */
+.path-node--done:not(.path-node--chest) {
+  --face: #58cc02;
+  --edge: #46a302;
+}
+
+/* Dua pita diagonal yang lebih terang di permukaan koin */
+.path-node:not(.path-node--chest) {
+  overflow: hidden; /* pita terpotong mengikuti bentuk koin */
+}
+.path-node:not(.path-node--chest)::before,
+.path-node:not(.path-node--chest)::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+/* Pita besar di kiri atas */
+.path-node:not(.path-node--chest)::before {
+  top: 6px;
+  left: 3px;
+  width: 46px;
+  height: 15px;
+  transform: rotate(-40deg);
+}
+/* Pita kecil di kanan bawah */
+.path-node:not(.path-node--chest)::after {
+  top: 45px;
+  left: 38px;
+  width: 36px;
+  height: 12px;
+  transform: rotate(-40deg);
+}
+/* Di koin abu-abu, pita dibuat lebih jelas supaya tetap terlihat */
+.path-node--locked:not(.path-node--chest)::before,
+.path-node--locked:not(.path-node--chest)::after {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Peti hadiah: tanpa koin, hanya gambar peti */
+.path-node--chest {
+  width: 84px;
+  height: 76px;
+  background: none;
+  box-shadow: none;
+}
+.path-node--chest svg {
+  width: 68px;
+  height: 68px;
+  filter: drop-shadow(0 6px 0 #d4d4d4);
+}
+.path-node--chest.path-node--locked svg {
+  filter: grayscale(1) opacity(0.6) drop-shadow(0 6px 0 #d4d4d4);
+}
+
+/* Pengaman: kalau masih ada sisa kode kilauan lama, jangan ditampilkan */
+.path-node .spark {
+  display: none;
+}
+
+/* ---------- Efek tekan: menekan ke bawah lalu memantul balik otomatis ---------- */
+.path-node.is-pressed {
+  animation: node-press 0.4s ease-out;
+}
+.path-node--chest.is-pressed {
+  animation-name: chest-press;
+}
+@keyframes node-press {
+  0%   { transform: translateY(0);    box-shadow: 0 8px 0 var(--edge); }
+  30%  { transform: translateY(8px);  box-shadow: 0 0 0 var(--edge); }
+  65%  { transform: translateY(-3px); box-shadow: 0 11px 0 var(--edge); }
+  100% { transform: translateY(0);    box-shadow: 0 8px 0 var(--edge); }
+}
+@keyframes chest-press {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(8px); }
+  65%  { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+.path-node:focus-visible {
+  outline: 3px solid #1cb0f6;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .path-node.is-pressed {
+    animation: none;
+  }
+}
+
+/* ---------- Layar kecil ---------- */
+@media (max-width: 800px) {
+  .learn__inner {
+    padding-bottom: 120px; /* ruang untuk sidebar di bawah */
+  }
+  .path__mascot {
+    display: none;
+  }
+}

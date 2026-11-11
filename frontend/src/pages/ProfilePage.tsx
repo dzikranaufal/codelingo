@@ -106,7 +106,7 @@ export default function ProfilePage() {
           <div className="stat-card">
             <span className="stat-icon">⚡</span>
             <div>
-              <p className="stat-value">{show(profile.total_xp)}</p>
+              <p className="stat-value">{show(profile.xp)}</p>
               <p className="stat-label">Total XP</p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function ProfilePage() {
           <div className="stat-card">
             <span className="stat-icon">❤️</span>
             <div>
-              <p className="stat-value">{show(profile.hearts)}</p>
+              <p className="stat-value">{show(profile.lives)}</p>
               <p className="stat-label">Hearts</p>
             </div>
           </div>
@@ -136,8 +136,8 @@ export default function ProfilePage() {
       <aside className="profile-side">
         <div className="topbar-stats">
           <span>🔥 {show(profile.streak)}</span>
-          <span>⚡ {show(profile.total_xp)}</span>
-          <span>❤️ {show(profile.hearts)}</span>
+          <span>⚡ {show(profile.xp)}</span>
+          <span>❤️ {show(profile.lives)}</span>
         </div>
 
         <div className="side-card">

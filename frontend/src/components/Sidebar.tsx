@@ -1,15 +1,25 @@
 // frontend/src/components/Sidebar.tsx
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import {
+  HomeIcon,
+  CodeTileIcon,
+  DumbbellIcon,
+  ShieldIcon,
+  ChestIcon,
+  StoreIcon,
+  MoreIcon,
+  CLangIcon,
+} from "./SidebarIcons";
 import "./Sidebar.css";
 
 type MenuItem = {
   label: string;
-  icon: string;
-  // round  = lingkaran putus-putus (avatar profil)
-  // kana   = huruf besar berwarna biru (menu Karakter)
-  // purple = lingkaran ungu (menu Lainnya)
-  variant?: "round" | "kana" | "purple";
+  icon: ReactNode; // teks atau komponen SVG dari SidebarIcons.tsx
+  path?: string; // tujuan halaman. Kalau kosong, menu hanya berubah warna
+  // round = lingkaran putus-putus (avatar profil)
+  variant?: "round";
 };
 
 // Props: semua opsional, jadi <Sidebar /> tetap bisa dipakai tanpa argumen
@@ -18,25 +28,29 @@ type SidebarProps = {
   onSelect?: (label: string) => void; // dipanggil setiap menu diklik
 };
 
-// Tambah atau hapus menu cukup lewat array ini
+// Tambah atau hapus menu cukup lewat array ini.
+// Isi "path" kalau halaman tujuannya sudah ada di App.tsx.
 const menuItems: MenuItem[] = [
-  { label: "Belajar", icon: "🏠" },
-  { label: "Karakter", icon: "あ", variant: "kana" },
-  { label: "Latihan", icon: "🏋️" },
-  { label: "Papan Skor", icon: "🛡️" },
-  { label: "Misi", icon: "🎁" },
-  { label: "Toko", icon: "🏪" },
-  { label: "Profil", icon: "A", variant: "round" },
-  { label: "Lainnya", icon: "···", variant: "purple" },
+  { label: "Belajar", icon: <HomeIcon />, path: "/belajar" },
+  { label: "Karakter", icon: <CodeTileIcon /> },
+  { label: "Latihan", icon: <DumbbellIcon /> },
+  { label: "Papan Skor", icon: <ShieldIcon />, path: "/papan-skor" },
+  { label: "Misi", icon: <ChestIcon /> },
+  { label: "Toko", icon: <StoreIcon /> },
+  { label: "Profil", icon: "A", path: "/profile", variant: "round" },
+  { label: "Lainnya", icon: <MoreIcon /> },
 ];
 
 export default function Sidebar({ defaultActive = "Belajar", onSelect }: SidebarProps) {
+  const navigate = useNavigate();
+
   // Menyimpan menu yang sedang aktif
   const [active, setActive] = useState<string>(defaultActive);
 
-  const handleClick = (label: string) => {
-    setActive(label);
-    onSelect?.(label); // beri tahu komponen induk (kalau ada)
+  const handleClick = (item: MenuItem) => {
+    setActive(item.label);
+    onSelect?.(item.label); // beri tahu komponen induk (kalau ada)
+    if (item.path) navigate(item.path); // pindah halaman kalau menu punya tujuan
   };
 
   return (
@@ -56,7 +70,7 @@ export default function Sidebar({ defaultActive = "Belajar", onSelect }: Sidebar
                   type="button"
                   className={`sidebar__item${isActive ? " sidebar__item--active" : ""}`}
                   aria-current={isActive ? "page" : undefined}
-                  onClick={() => handleClick(item.label)}
+                  onClick={() => handleClick(item)}
                 >
                   <span
                     className={`sidebar__icon${item.variant ? ` sidebar__icon--${item.variant}` : ""}`}
@@ -75,12 +89,12 @@ export default function Sidebar({ defaultActive = "Belajar", onSelect }: Sidebar
       {/* Kartu promo di bawah menu */}
       <div className="sidebar__promo">
         <div className="sidebar__promo-icon" aria-hidden="true">
-          🐍
+          <CLangIcon />
         </div>
-        <h3>Mau belajar Python?</h3>
+        <h3>Mau belajar bahasa C?</h3>
         <p>Jadi mudah dengan CodeLingo!</p>
         <button type="button" className="sidebar__promo-btn">
-          Coba Python
+          Coba bahasa C
         </button>
       </div>
     </aside>

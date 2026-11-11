@@ -1,0 +1,40 @@
+.input-wrapper { position: relative; }
+
+.clear-btn {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #afafaf;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clear-btn:hover { background: #8a8a8a; }
+
+.login-hint {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #777;
+  margin: 4px 0 16px;
+}
+
+.social-row {
+  display: flex;
+  gap: 12px;
+}
+.social-row .btn { flex: 1; }
+
+/* Hilangkan panah naik-turun bawaan input angka */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; }
