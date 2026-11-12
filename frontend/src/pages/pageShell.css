@@ -1,0 +1,92 @@
+/* frontend/src/pages/pageShell.css */
+.shell {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  min-height: 100vh;
+  padding: 0 24px;
+  background: #fff;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color: #3c3c3c;
+}
+.shell *,
+.shell *::before,
+.shell *::after {
+  box-sizing: border-box;
+}
+.shell__main {
+  flex: 1 1 560px;
+  max-width: 600px;
+  min-width: 0;
+  padding: 24px 0 100px;
+}
+.shell__side {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  display: flex;
+  flex: 0 0 340px;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 24px;
+}
+
+.panel {
+  padding: 20px;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+.panel h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 32px 0 14px;
+}
+.section-head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+}
+.section-head a {
+  color: #1cb0f6;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* Layar sempit: panel kanan pindah ke bawah konten utama */
+@media (max-width: 1200px) {
+  .shell {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .shell__main,
+  .shell__side {
+    width: 100%;
+    max-width: 600px;
+    flex: none;
+  }
+  .shell__side {
+    position: static;
+    order: 2;
+    padding-bottom: 100px;
+  }
+  .shell__main {
+    padding-bottom: 24px;
+  }
+}
+@media (max-width: 800px) {
+  .shell {
+    padding: 0 16px;
+  }
+}

@@ -1,0 +1,65 @@
+/* frontend/src/pages/AchievementsPage.css */
+.achievements h1 {
+  margin: 16px 0 20px;
+  font-size: 28px;
+  font-weight: 900;
+}
+.achievements__back {
+  color: #1cb0f6;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.achievements__list {
+  padding: 0;
+  overflow: hidden;
+}
+.ach-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e5e5e5;
+}
+.ach-item:last-child {
+  border-bottom: 0;
+}
+.ach-item__body {
+  flex: 1;
+  min-width: 0;
+}
+.ach-item__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ach-item__top h3 {
+  margin: 0;
+  font-size: 20px;
+}
+.ach-item__top span {
+  color: #afafaf;
+  font-weight: 800;
+}
+.ach-item__bar {
+  height: 18px;
+  margin: 12px 0;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #e5e5e5;
+}
+.ach-item__bar span {
+  display: block;
+  height: 100%;
+  border-radius: 9px;
+  background: #ffc800;
+}
+.ach-item__body p {
+  margin: 8px 0 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #555;
+}

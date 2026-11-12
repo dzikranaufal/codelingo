@@ -1,0 +1,133 @@
+/* frontend/src/pages/LearnPage.css */
+.learn-page {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  min-height: 100vh;
+  padding: 0 24px;
+  background: #fff;
+}
+.learn-page__main {
+  flex: 1 1 560px;
+  max-width: 600px;
+  min-width: 0;
+}
+
+/* Panel kanan: menempel di atas saat di-scroll */
+.learn-page__side {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  display: flex;
+  flex: 0 0 340px;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 24px;
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color: #3c3c3c;
+}
+
+/* Kartu umum */
+.card {
+  padding: 20px;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+.card h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 900;
+}
+.card p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #777;
+}
+.card__eyebrow {
+  margin-bottom: 10px !important;
+  font-size: 13px !important;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #afafaf !important;
+}
+
+/* Tombol di kartu */
+.btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: 2px solid transparent;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.btn--blue {
+  border-color: #2b3ff0;
+  background: #4a5cf5;
+  color: #fff;
+}
+.btn--outline {
+  border-color: #e5e5e5;
+  background: #fff;
+  color: #1cb0f6;
+}
+
+/* Kartu Plus */
+.plus {
+  display: grid;
+  grid-template-columns: 1fr 96px;
+  align-items: center;
+  gap: 12px;
+}
+.plus__tag {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #1cb0f6, #ce82ff);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+.plus__img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+.plus .btn {
+  grid-column: 1 / -1;
+}
+
+/* Kartu papan skor */
+.board__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.board__badge {
+  flex-shrink: 0;
+  width: 64px;
+  height: 74px;
+}
+
+/* Layar sempit: panel kanan disembunyikan supaya jalur belajar tidak terjepit */
+@media (max-width: 1200px) {
+  .learn-page__side {
+    display: none;
+  }
+}

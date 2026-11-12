@@ -1,0 +1,523 @@
+/* frontend/src/pages/UserProfilePage.css */
+.uprofile__banner {
+  display: grid;
+  place-items: end center;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #e5e5e5;
+}
+.uprofile__art {
+  width: 300px;
+  height: 200px;
+}
+.uprofile__name {
+  margin: 20px 0 2px;
+  font-size: 30px;
+  font-weight: 900;
+}
+.uprofile__user {
+  margin: 0 0 4px;
+  color: #afafaf;
+  font-weight: 700;
+}
+.uprofile__joined {
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+.uprofile__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.uprofile__follow {
+  display: flex;
+  gap: 20px;
+  color: #1cb0f6;
+  font-weight: 800;
+}
+.uprofile__langs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.uprofile__chip {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 34px;
+  padding: 4px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+}
+.uprofile__chip svg {
+  width: 100%;
+  height: 100%;
+}
+.uprofile__more {
+  display: grid;
+  place-items: center;
+  height: 34px;
+  padding: 0 8px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  color: #afafaf;
+  font-weight: 800;
+}
+
+/* Tombol Laporkan dan opsi lain */
+.uprofile__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+.uprofile__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  background: #fff;
+  color: #afafaf;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.uprofile__btn svg {
+  width: 20px;
+  height: 20px;
+}
+.uprofile__btn--icon {
+  padding: 12px 20px;
+  letter-spacing: 2px;
+}
+.uprofile__divider {
+  height: 2px;
+  margin-top: 24px;
+  background: #e5e5e5;
+}
+
+/* Statistik */
+.uprofile__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.stat-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+}
+.stat-card > svg {
+  width: 30px;
+  height: 34px;
+  flex-shrink: 0;
+}
+.stat-card b {
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+}
+.stat-card span {
+  color: #777;
+  font-weight: 700;
+}
+.stat-card__tag {
+  position: absolute;
+  top: -12px;
+  right: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #ffc800;
+  color: #3c3c3c;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* Grafik XP */
+.xp__legend {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0 8px;
+  list-style: none;
+}
+.xp__legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+.xp__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.xp__name {
+  flex: 1;
+  font-weight: 700;
+}
+.xp__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Pencapaian */
+.uprofile__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px;
+}
+.uprofile__badge {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.uprofile__badge:hover {
+  transform: translateY(-2px);
+}
+
+/* Panel Mengikuti / Pengikut */
+.follow {
+  padding: 0;
+  overflow: hidden;
+}
+.follow__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid #e5e5e5;
+}
+.follow__tab {
+  padding: 16px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: #777;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.follow__tab[aria-selected="true"] {
+  border-bottom-color: #1cb0f6;
+  color: #1cb0f6;
+}
+.follow__empty {
+  margin: 0;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+.follow__list {
+  margin: 0;
+  padding: 8px 20px;
+  list-style: none;
+}
+.follow-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+}
+.follow-row__avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ce82ff;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+}
+.follow-row b {
+  display: block;
+  font-size: 18px;
+}
+.follow-row span:not(.follow-row__avatar) {
+  color: #afafaf;
+  font-weight: 700;
+}
+
+/* Tab Pengikut: "Jadilah pengikut pertamanya!" */
+.follow__box {
+  padding: 24px 20px 20px;
+}
+.follow__box h3 {
+  margin: 0 0 12px;
+  font-size: 24px;
+  line-height: 1.25;
+}
+.follow__art {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 8px auto 16px;
+}
+.follow__box p {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #555;
+}
+.follow__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-bottom: 4px solid #1899d6;
+  border-radius: 14px;
+  background: #1cb0f6;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.follow__btn svg {
+  width: 22px;
+  height: 22px;
+}
+.follow__btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Pop-up daftar bahasa */
+.lang-list {
+  margin: 0;
+  padding: 20px;
+  list-style: none;
+}
+.lang-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 8px;
+  border-bottom: 2px solid #e5e5e5;
+}
+.lang-row:last-child {
+  border-bottom: 0;
+}
+.lang-row__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.lang-row__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.lang-row__name {
+  flex: 1;
+  font-size: 17px;
+}
+.lang-row__xp {
+  color: #afafaf;
+  font-weight: 800;
+}
+.lang-row__go {
+  width: 22px;
+  height: 22px;
+  color: #afafaf;
+}
+
+/* Pop-up pencapaian */
+.ach-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44px 32px 32px;
+  text-align: center;
+}
+.ach-modal h2 {
+  margin: 24px 0 12px;
+  font-size: 28px;
+  font-weight: 900;
+}
+.ach-modal p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #777;
+}
+.ach-modal b {
+  color: #3c3c3c;
+}
+
+/* ===== PERUBAHAN: pencapaian satu baris ===== */
+.uprofile__badges {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px;
+  overflow-x: auto; /* kalau layar sangat sempit, digeser ke samping */
+}
+.uprofile__badges .badge {
+  --w: 96px; /* lima ikon muat sebaris */
+}
+.uprofile__badge {
+  flex-shrink: 0;
+}
+
+/* ===== PERUBAHAN: catatan setelah melaporkan ===== */
+.uprofile__note {
+  margin: 14px 0 0;
+  color: #777;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ===== PERUBAHAN: pop-up Laporkan ===== */
+.report {
+  padding: 44px 32px 32px;
+  text-align: center;
+}
+.report h2 {
+  margin: 0 0 28px;
+  font-size: 28px;
+  font-weight: 900;
+  color: #3c3c3c;
+}
+.report__select {
+  position: relative;
+}
+.report__select select {
+  width: 100%;
+  height: 54px;
+  padding: 0 52px 0 20px;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  background: #f7f7f7;
+  color: #3c3c3c;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-align: center;
+  text-align-last: center;
+  text-transform: uppercase;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.report__select select.report__select--empty {
+  color: #afafaf;
+}
+.report__select select:focus {
+  outline: none;
+  border-color: #1cb0f6;
+  background: #fff;
+}
+.report__select select option {
+  color: #3c3c3c;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+.report__select > svg {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  color: #777;
+  pointer-events: none;
+}
+.report__actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+.report__cancel,
+.report__submit {
+  padding: 14px 28px;
+  border: 2px solid transparent;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.report__cancel {
+  border-color: #e5e5e5;
+  background: #fff;
+  color: #777;
+}
+.report__submit {
+  border-color: #d93a3a;
+  background: #ff4b4b;
+  color: #fff;
+}
+.report__cancel:active,
+.report__submit:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+/* Nonaktif sampai alasan dipilih, abu-abu seperti di contoh */
+.report__submit:disabled {
+  border-color: #e5e5e5;
+  background: #e5e5e5;
+  color: #afafaf;
+  cursor: not-allowed;
+}
+
+/* ===== PERUBAHAN: foto profil dan foto pengikut dari assets ===== */
+
+/* Banner profil: gambar memenuhi kotak 240px seperti sebelumnya */
+.uprofile__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  transform: translateY(18px);
+}
+
+/* Tab Pengikut: tinggi tetap supaya tata letak panel tidak berubah */
+.follow__photo {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: 187px;
+  margin: 8px auto 16px;
+  object-fit: contain;
+}

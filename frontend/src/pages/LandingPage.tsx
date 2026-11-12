@@ -84,7 +84,7 @@ export default function LandingPage() {
         </div>
         <div className="hero__copy">
           <h1>Cara paling seru untuk belajar coding, logika, dan lainnya!</h1>
-          <Link to="/register" className="btn btn--primary">
+          <Link to="/belajar" className="btn btn--primary">
             Mulai
           </Link>
           <Link to="/login" className="btn btn--ghost">
