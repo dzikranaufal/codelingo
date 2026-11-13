@@ -1,6 +1,6 @@
 // frontend/src/components/LessonPath.tsx
 import { type MouseEvent } from "react";
-import logo from "../assets/logo.png";
+import maskot1 from "../assets/maskot1.png";
 import "./LessonPath.css";
 
 export type NodeType = "lesson" | "chest" | "trophy";
@@ -153,7 +153,7 @@ export default function LessonPath({ units, onSelectNode }: LessonPathProps) {
                     <NodeIcon node={node} />
                   </button>
 
-                  {node.mascot && <img src={logo} alt="" className="path__mascot" />}
+                  {node.mascot && <img src={maskot1} alt="" className="path__mascot" />}
                 </li>
               ))}
             </ol>

@@ -1,11 +1,15 @@
 // frontend/src/pages/LearnPage.tsx
-import LessonPath, { type PathUnit } from "../components/LessonPath";
+import { useNavigate } from "react-router-dom";
+import LessonPath, { type PathNode, type PathUnit } from "../components/LessonPath";
 import StatsBar, { type Stats } from "../components/StatsBar";
-import logo from "../assets/logo.png";
+import Maskot2 from "../assets/maskot2.png";
 import "./LearnPage.css";
 
 // DATA SEMENTARA (contoh). Nanti diganti data dari backend (Tahap 5 dan 6).
 // Status pelajaran, hati, permata, runtunan harus ditentukan backend, bukan frontend.
+//
+// PENTING: id node bertipe "lesson" harus sama dengan id lesson di database.
+// Ganti "1", "2", "3" di bawah dengan id lesson asli dari tabel lesson (phpMyAdmin).
 const units: PathUnit[] = [
   {
     id: "unit-1",
@@ -13,11 +17,11 @@ const units: PathUnit[] = [
     title: "Halo, Dunia!",
     color: "green",
     nodes: [
-      { id: "1-1", type: "lesson", status: "done" },
-      { id: "1-2", type: "lesson", status: "done" },
+      { id: "1", type: "lesson", status: "current" },
+      { id: "2", type: "lesson", status: "done" },
       { id: "1-3", type: "chest", status: "done", mascot: true },
-      { id: "1-4", type: "lesson", status: "done" },
-      { id: "1-5", type: "trophy", status: "current" },
+      { id: "3", type: "lesson", status: "done" },
+      { id: "1-5", type: "trophy", status: "locked" },
     ],
   },
   {
@@ -72,10 +76,18 @@ function ShieldBadge() {
 }
 
 export default function LearnPage() {
+  const navigate = useNavigate();
+
+  const handleSelectNode = (node: PathNode) => {
+    if (node.status === "locked") return; // node terkunci tidak bisa dibuka
+    if (node.type !== "lesson") return; // peti dan ujian belum punya sesi
+    navigate(`/belajar/pelajaran/${node.id}`);
+  };
+
   return (
     <div className="learn-page">
       <div className="learn-page__main">
-        <LessonPath units={units} />
+        <LessonPath units={units} onSelectNode={handleSelectNode} />
       </div>
 
       {/* Panel kanan: statistik + 2 kartu (Plus dan Papan Skor) */}
@@ -88,7 +100,7 @@ export default function LearnPage() {
             <h3>Coba Plus gratis</h3>
             <p>Bebas iklan, latihan yang dipersonalisasi, dan hati tak terbatas!</p>
           </div>
-          <img src={logo} alt="" className="plus__img" />
+          <img src={Maskot2} alt="" className="plus__img" />
           <button type="button" className="btn btn--blue">
             Coba 1 minggu gratis
           </button>
