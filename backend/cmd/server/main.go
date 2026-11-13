@@ -17,6 +17,7 @@ import (
 	"codelingo/backend/internal/middleware"
 	"codelingo/backend/internal/models"
 	"codelingo/backend/internal/profile"
+	"codelingo/backend/internal/admin"
 
 	// "codelingo/backend/internal/content"
 
@@ -61,11 +62,16 @@ func main() {
 	mux.HandleFunc("/api/v1/auth/register", handler.Register)
 	mux.HandleFunc("/api/v1/auth/login", handler.Login)
 	authenticate := middleware.Authenticate(db, []byte(cfg.JWTSecret))
+
+	
 	profileHandler := &profile.Handler{Service: &profile.Service{DB: db}}
 	mux.Handle("/api/v1/profile", authenticate(http.HandlerFunc(profileHandler.Profile)))
 	mux.Handle("/api/v1/profile/password", authenticate(http.HandlerFunc(profileHandler.Password)))
 	adminAuthHandler := &adminauth.Handler{Service: &adminauth.Service{DB: db, JWTSecret: []byte(cfg.JWTSecret)}}
 	requireAdmin := middleware.RequireRole(models.RoleAdmin)
+	    adminContent := &admin.Handler{Service: &admin.Service{DB: db}}
+    mux.Handle("/api/v1/admin/learning-paths/", authenticate(requireAdmin(http.HandlerFunc(adminContent.PathRoutes))))
+    mux.Handle("/api/v1/admin/lessons/", authenticate(requireAdmin(http.HandlerFunc(adminContent.LessonRoutes))))
 	mux.HandleFunc("/api/v1/admin/auth/login", adminAuthHandler.Login)
 	mux.Handle("/api/v1/admin/me", authenticate(requireAdmin(http.HandlerFunc(adminAuthHandler.Me))))
 	leaderboardHandler := &leaderboard.Handler{Service: &leaderboard.Service{DB: db}}

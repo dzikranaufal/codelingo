@@ -190,3 +190,18 @@
     padding: 8px;
   }
 }
+
+/* PERUBAHAN: ukuran ikon SVG di menu dan logo C di kartu promo */
+.sidebar__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.sidebar__promo-icon {
+  display: flex;
+  justify-content: center;
+}
+.sidebar__promo-icon svg {
+  width: 48px;
+  height: 48px;
+}
