@@ -164,3 +164,45 @@
   padding-right: 24px;
   right: 16px;
 }
+}
+
+/* ===== PERBAIKAN: tombol SIGN UP / LOGIN di pojok kanan atas ===== */
+.login-page .login-signup {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
+  height: 48px;
+  margin: 0;
+  padding: 0 24px;
+  border: 2px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+  border-radius: 14px;
+  background: #fff;
+  color: #1cb0f6;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+.login-page .login-signup:hover { background: #f7f7f7; }
+.login-page .login-signup:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+@media (max-width: 480px) {
+  .login-page .login-signup {
+    top: 12px;
+    right: 16px;
+    height: 44px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+}
