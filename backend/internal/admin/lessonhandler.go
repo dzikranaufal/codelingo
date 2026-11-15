@@ -65,19 +65,34 @@ func (h *Handler) PathRoutes(w http.ResponseWriter, r *http.Request) {
 
 // LessonRoutes menangani:
 //
-//	GET    /api/v1/admin/lessons/{id}  detail lesson + soal + kunci jawaban
-//	PATCH  /api/v1/admin/lessons/{id}  ubah lesson
-//	DELETE /api/v1/admin/lessons/{id}  hapus lesson (409 jika masih punya isi)
+//	GET    /api/v1/admin/lessons/{id}            detail lesson + soal + kunci jawaban
+//	PATCH  /api/v1/admin/lessons/{id}            ubah lesson
+//	DELETE /api/v1/admin/lessons/{id}            hapus lesson (409 jika masih punya isi)
+//	POST   /api/v1/admin/lessons/{id}/questions  tambah soal
 func (h *Handler) LessonRoutes(w http.ResponseWriter, r *http.Request) {
 	rest := strings.Trim(strings.TrimPrefix(r.URL.Path, adminLessonsPrefix), "/")
-	if rest == "" || strings.Contains(rest, "/") {
+	if rest == "" {
+		httpx.WriteError(w, http.StatusNotFound, "alamat tidak ditemukan")
+		return
+	}
+	parts := strings.Split(rest, "/")
+	if len(parts) > 2 {
 		httpx.WriteError(w, http.StatusNotFound, "alamat tidak ditemukan")
 		return
 	}
 
-	lessonID, ok := parseID(rest)
+	lessonID, ok := parseID(parts[0])
 	if !ok {
 		httpx.WriteError(w, http.StatusBadRequest, "id lesson tidak valid")
+		return
+	}
+
+	if len(parts) == 2 {
+		if parts[1] != "questions" {
+			httpx.WriteError(w, http.StatusNotFound, "alamat tidak ditemukan")
+			return
+		}
+		h.createQuestion(w, r, lessonID)
 		return
 	}
 
