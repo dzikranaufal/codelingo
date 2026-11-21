@@ -33,7 +33,7 @@ export default function LoginPage() {
         } else if (err.response.status === 401) {
           setError("Email/username atau password salah.");
         } else {
-          setError(err.response.data?.message ?? "Terjadi kesalahan. Coba lagi.");
+          setError(err.response.data?.error ?? err.response.data?.message ?? "Terjadi kesalahan. Coba lagi.");
         }
       } else {
         setError("Terjadi kesalahan yang tidak diketahui.");

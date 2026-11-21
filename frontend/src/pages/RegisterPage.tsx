@@ -73,7 +73,7 @@ export default function RegisterPage() {
         } else if (err.response.status === 409) {
           setError("Email atau username sudah terdaftar.");
         } else {
-          setError(err.response.data?.message ?? "Terjadi kesalahan. Coba lagi.");
+          setError(err.response.data?.error ?? err.response.data?.message ?? "Terjadi kesalahan. Coba lagi.");
         }
       } else {
         setError("Terjadi kesalahan yang tidak diketahui.");

@@ -45,6 +45,9 @@ export default function App() {
             </SidebarLayout>
           }
         />
+
+        {/* Sesi kuis: layar penuh, tanpa sidebar */}
+
         <Route
           path="/kursus"
           element={
