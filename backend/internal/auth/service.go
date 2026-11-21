@@ -114,7 +114,13 @@ func (s *Service) Login(input LoginInput) (*AuthResponse, error) {
 		return nil, ErrInternal
 	}
 
-	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)) != nil {
+		if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)) != nil {
+		return nil, ErrInvalidCreds
+	}
+
+	// BARU: akun admin hanya boleh masuk lewat /api/v1/admin/auth/login.
+	// Jawabannya sengaja sama dengan password salah agar tidak membocorkan role.
+	if user.Role == models.RoleAdmin {
 		return nil, ErrInvalidCreds
 	}
 
