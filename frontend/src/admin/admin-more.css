@@ -1,0 +1,108 @@
+/* Tambahan gaya panel admin: menu, ringkasan, pencarian, paginasi, profil. */
+
+.adm-nav {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: 24px;
+}
+
+.adm-nav-link {
+  padding: 8px 14px;
+  border-radius: 12px;
+  color: var(--ink-soft);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.adm-nav-link:hover {
+  background: var(--mist);
+  color: var(--ink);
+}
+
+.adm-nav-active {
+  background: #ddf4ff;
+  color: var(--sky-deep);
+}
+
+.adm-select {
+  appearance: auto;
+}
+
+/* ringkasan */
+
+.adm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2px;
+  margin: 20px 0 0;
+  background: var(--line);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.adm-stat {
+  padding: 16px 20px;
+  background: #ffffff;
+}
+
+.adm-stat dt {
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.adm-stat dd {
+  margin: 4px 0 0;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* akun */
+
+.adm-search {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.adm-search .adm-input {
+  max-width: 360px;
+}
+
+.adm-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* profil admin */
+
+.adm-section {
+  max-width: 480px;
+  margin-top: 32px;
+}
+
+.adm-section .adm-subtitle {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 760px) {
+  .adm-topbar {
+    flex-wrap: wrap;
+  }
+  .adm-nav {
+    order: 3;
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  .adm-pager {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

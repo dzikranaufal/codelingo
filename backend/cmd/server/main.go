@@ -84,6 +84,10 @@ func main() {
 	mux.Handle("/api/v1/admin/learning-paths/", authenticate(requireAdmin(http.HandlerFunc(adminContent.PathRoutes))))
 	mux.Handle("/api/v1/admin/lessons/", authenticate(requireAdmin(http.HandlerFunc(adminContent.LessonRoutes))))
 	mux.Handle("/api/v1/admin/questions/", authenticate(requireAdmin(http.HandlerFunc(adminContent.QuestionRoutes))))
+	mux.Handle("/api/v1/admin/languages", authenticate(requireAdmin(http.HandlerFunc(adminContent.Languages))))
+	mux.Handle("/api/v1/admin/users", authenticate(requireAdmin(http.HandlerFunc(adminContent.Users))))
+	mux.Handle("/api/v1/admin/users/", authenticate(requireAdmin(http.HandlerFunc(adminContent.UserRoutes))))
+	mux.Handle("/api/v1/admin/stats", authenticate(requireAdmin(http.HandlerFunc(adminContent.Stats))))
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

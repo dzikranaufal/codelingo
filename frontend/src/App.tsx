@@ -1,4 +1,4 @@
-// frontend/src/App.tsx
+﻿// frontend/src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import LandingPage from "./pages/LandingPage";
@@ -11,6 +11,7 @@ import LeaderboardPage from "./pages/LeaderboardPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import AchievementsPage from "./pages/AchievementsPage";
 import Sidebar from "./components/Sidebar";
+import AdminApp from "./admin/AdminApp";
 import "./App.css";
 
 // Layout halaman dengan sidebar di kiri dan konten di kanan
@@ -85,6 +86,8 @@ export default function App() {
             </SidebarLayout>
           }
         />
+
+        <Route path="/admin/*" element={<AdminApp />} />
 
         {/* Alamat yang tidak dikenal kembali ke landing page */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,0 +1,49 @@
+/* Tambahan gaya untuk formulir soal. Dipakai oleh LessonDetailPage. */
+
+.adm-modal-wide {
+  max-width: 640px;
+}
+
+.adm-mono {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 14px;
+}
+
+.adm-fieldset {
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+}
+
+.adm-fieldset legend {
+  padding: 0;
+}
+
+.adm-opt-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.adm-opt-row .adm-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-opt-row input[type="radio"] {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  accent-color: #58cc02;
+}
+
+.adm-hint {
+  margin: 4px 0 8px;
+  color: #777777;
+  font-size: 14px;
+}
+
+.adm-question-actions {
+  margin-top: 12px;
+}
