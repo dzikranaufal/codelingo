@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"codelingo/backend/internal/admin"
 	"codelingo/backend/internal/adminauth"
 	"codelingo/backend/internal/auth"
 	"codelingo/backend/internal/config"
@@ -16,10 +17,9 @@ import (
 	"codelingo/backend/internal/database"
 	"codelingo/backend/internal/leaderboard"
 	"codelingo/backend/internal/middleware"
+	"codelingo/backend/internal/missions"
 	"codelingo/backend/internal/models"
 	"codelingo/backend/internal/profile"
-	"codelingo/backend/internal/admin"
-
 
 	"gorm.io/gorm"
 )
@@ -80,6 +80,10 @@ func main() {
 	leaderboardHandler := &leaderboard.Handler{Service: &leaderboard.Service{DB: db}}
 	mux.Handle("/api/v1/leaderboard", authenticate(http.HandlerFunc(leaderboardHandler.List)))
 
+	// Misi harian (read-only; progres dihitung dari progress dan quiz_attempts).
+	missionHandler := &missions.Handler{Service: &missions.Service{DB: db}}
+	mux.Handle("/api/v1/me/missions", authenticate(requireLearner(http.HandlerFunc(missionHandler.List))))
+
 	// Login dan sesi admin
 	adminAuthHandler := &adminauth.Handler{Service: &adminauth.Service{DB: db, JWTSecret: []byte(cfg.JWTSecret)}}
 	mux.HandleFunc("/api/v1/admin/auth/login", adminAuthHandler.Login)
@@ -91,17 +95,12 @@ func main() {
 	mux.Handle("/api/v1/admin/learning-paths/", authenticate(requireAdmin(http.HandlerFunc(adminContent.PathRoutes))))
 	mux.Handle("/api/v1/admin/lessons/", authenticate(requireAdmin(http.HandlerFunc(adminContent.LessonRoutes))))
 	mux.Handle("/api/v1/admin/questions/", authenticate(requireAdmin(http.HandlerFunc(adminContent.QuestionRoutes))))
-	mux.Handle("/api/v1/admin/languages", authenticate(requireAdmin(http.HandlerFunc(adminContent.Languages))))
-	mux.Handle("/api/v1/admin/users", authenticate(requireAdmin(http.HandlerFunc(adminContent.Users))))
-	mux.Handle("/api/v1/admin/users/", authenticate(requireAdmin(http.HandlerFunc(adminContent.UserRoutes))))
-	mux.Handle("/api/v1/admin/stats", authenticate(requireAdmin(http.HandlerFunc(adminContent.Stats))))
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"status":"ok"}`))
 	})
-
 
 	server := &http.Server{
 		Addr:              ":" + cfg.ServerPort,

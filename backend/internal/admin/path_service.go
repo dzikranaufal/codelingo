@@ -60,6 +60,38 @@ func (s *Service) ensurePathOrderFree(tx *gorm.DB, languageID uint, order int, e
 	return nil
 }
 
+
+// pathSummaryByID mengambil detail learning path beserta nama bahasa
+// dan jumlah lesson yang dimiliki.
+func (s *Service) pathSummaryByID(tx *gorm.DB, pathID uint) (*PathSummary, error) {
+	var summary PathSummary
+
+	err := tx.Table("learning_paths AS lp").
+		Select(
+			"lp.id AS id, " +
+				"lp.name AS name, " +
+				"lp.description AS description, " +
+				"lp.language_id AS language_id, " +
+				"COALESCE(lg.name, '') AS language_name, " +
+				"COALESCE(lg.is_available, 0) AS language_available, " +
+				"lp.order_index AS order_index, " +
+				"(SELECT COUNT(*) FROM learning_path_lessons plp " +
+				"WHERE plp.learning_path_id = lp.id) AS lesson_count",
+		).
+		Joins("LEFT JOIN languages lg ON lg.id = lp.language_id").
+		Where("lp.id = ?", pathID).
+		Take(&summary).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, newErr(http.StatusNotFound, "path tidak ditemukan")
+		}
+		return nil, internalErr("get path summary", err)
+	}
+
+	return &summary, nil
+}
+
 func (s *Service) ListLanguages() ([]LanguageView, error) {
 	var languages []LanguageView
 	err := s.DB.Table("languages AS lg").

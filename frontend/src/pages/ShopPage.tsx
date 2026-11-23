@@ -1,25 +1,17 @@
 // frontend/src/pages/ShopPage.tsx
 import { Link, useNavigate } from "react-router-dom";
 import StatsBar from "../components/StatsBar";
-import { FreezeIcon, GemIcon, HeartBigIcon, InfinityHeartIcon, LockIcon } from "../components/ShopIcons";
+import { FreezeIcon, HeartBigIcon, InfinityHeartIcon, LockIcon } from "../components/ShopIcons";
 import logo from "../assets/logo.png";
-import { myStats } from "../data/mockData";
+import { useMyStats } from "../hooks/useMyStats";
 import "./pageShell.css";
 import "./ShopPage.css";
 
-// DATA SEMENTARA. Harga, stok power-up, dan hasil pembelian harus ditentukan
-// dan divalidasi backend (Tahap 6), bukan dihitung di frontend.
-const HEART_REFILL_COST = 350;
-const FREEZE_COST = 600;
-const FREEZE_ACTIVE = 0;
-const FREEZE_MAX = 2;
-
 export default function ShopPage() {
   const navigate = useNavigate();
+  const myStats = useMyStats();
 
-  const heartsFull = myStats.hearts >= myStats.maxHearts;
-  const canRefill = !heartsFull && myStats.gems >= HEART_REFILL_COST;
-  const canBuyFreeze = FREEZE_ACTIVE < FREEZE_MAX && myStats.gems >= FREEZE_COST;
+  const heartsFull = !!myStats && myStats.hearts >= myStats.maxHearts;
 
   return (
     <div className="shell">
@@ -31,8 +23,8 @@ export default function ShopPage() {
             <p>
               Lebih hemat belajar dengan <b>CodeLingo Plus</b> bersama teman-teman
             </p>
-            <button type="button" className="promo-banner__btn">
-              Lebih lanjut
+            <button type="button" className="promo-banner__btn" disabled>
+              Segera hadir
             </button>
           </div>
           <div className="promo-banner__art">
@@ -51,15 +43,8 @@ export default function ShopPage() {
               <h3>Isi Ulang Hati</h3>
               <p>Dapatkan hati penuh agar kamu tidak takut membuat kesalahan dalam pelajaran.</p>
             </div>
-            {/* Belum tersambung backend */}
-            <button type="button" className={`shop-btn${canRefill ? "" : " shop-btn--off"}`} disabled={!canRefill}>
-              {heartsFull ? (
-                "Penuh"
-              ) : (
-                <>
-                  Tukar: <span className="shop-btn__gem"><GemIcon /></span> {HEART_REFILL_COST}
-                </>
-              )}
+            <button type="button" className="shop-btn shop-btn--off" disabled>
+              {heartsFull ? "Penuh" : "Belum tersedia"}
             </button>
           </li>
 
@@ -71,8 +56,8 @@ export default function ShopPage() {
               <h3>Hati Tak Terbatas</h3>
               <p>Takkan lagi kehabisan hati bersama CodeLingo Plus!</p>
             </div>
-            <button type="button" className="shop-btn shop-btn--plus">
-              Coba gratis
+            <button type="button" className="shop-btn shop-btn--plus" disabled>
+              Belum tersedia
             </button>
           </li>
         </ul>
@@ -88,20 +73,20 @@ export default function ShopPage() {
               <h3>
                 Pembeku Runtunan
                 <span className="shop-tag">
-                  {FREEZE_ACTIVE} / {FREEZE_MAX} aktif
+                  Belum tersedia
                 </span>
               </h3>
               <p>Pembeku Runtunan mencegah runtunanmu hilang meskipun tidak beraktivitas selama sehari penuh.</p>
             </div>
-            <button type="button" className={`shop-btn${canBuyFreeze ? "" : " shop-btn--off"}`} disabled={!canBuyFreeze}>
-              Tukar: <span className="shop-btn__gem"><GemIcon /></span> {FREEZE_COST}
+            <button type="button" className="shop-btn shop-btn--off" disabled>
+              Belum tersedia
             </button>
           </li>
         </ul>
       </div>
 
       <aside className="shell__side">
-        <StatsBar stats={myStats} />
+        {myStats && <StatsBar stats={myStats} />}
 
         {/* Kartu liga */}
         <section className="panel side-card">
@@ -128,7 +113,7 @@ export default function ShopPage() {
             <div>
               <b>0 Runtunan Teman aktif</b>
               {/* Belum ada halaman daftar teman */}
-              <button type="button">Lihat daftar</button>
+              <button type="button" disabled>Lihat daftar</button>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-﻿// frontend/src/App.tsx
+// frontend/src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import LandingPage from "./pages/LandingPage";
@@ -10,9 +10,11 @@ import CoursesPage from "./pages/CoursesPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import AchievementsPage from "./pages/AchievementsPage";
+import ShopPage from "./pages/ShopPage";
+import QuestPage from "./pages/QuestPage";
+import CharacterPage from "./pages/CharacterPage";
 import LessonSessionPage from "./pages/LessonSessionPage";
 import Sidebar from "./components/Sidebar";
-import AdminApp from "./admin/AdminApp";
 import "./App.css";
 
 // Halaman yang butuh login: tanpa token, arahkan ke /login.
@@ -110,6 +112,37 @@ export default function App() {
           }
         />
         <Route
+          path="/toko"
+          element={
+            <RequireAuth>
+              <SidebarLayout defaultActive="Toko">
+                <ShopPage />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/misi"
+          element={
+            <RequireAuth>
+              <SidebarLayout defaultActive="Misi">
+                <QuestPage />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/karakter"
+          element={
+            <RequireAuth>
+              <SidebarLayout defaultActive="Karakter">
+                <CharacterPage />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+
+        <Route
           path="/profile"
           element={
             <RequireAuth>
@@ -119,8 +152,6 @@ export default function App() {
             </RequireAuth>
           }
         />
-
-        <Route path="/admin/*" element={<AdminApp />} />
 
         {/* Alamat yang tidak dikenal kembali ke landing page */}
         <Route path="*" element={<Navigate to="/" replace />} />

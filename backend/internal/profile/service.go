@@ -5,7 +5,6 @@ import (
 	"log"
 	"strings"
 	"unicode/utf8"
-	"time"
 
 	"codelingo/backend/internal/models"
 
@@ -35,7 +34,6 @@ type Response struct {
 	XP       int    `json:"xp"`
 	Level    int    `json:"level"`
 	Lives    int    `json:"lives"`
-	CreatedAt time.Time `json:"created_at"`
 }
 
 func NewResponse(u *models.User) Response {
@@ -49,7 +47,6 @@ func NewResponse(u *models.User) Response {
 		XP:       u.XP,
 		Level:    u.Level,
 		Lives:    u.Lives,
-		CreatedAt: u.CreatedAt,
 	}
 }
 

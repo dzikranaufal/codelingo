@@ -1,5 +1,4 @@
 ﻿export interface Profile {
-  
   id: number;
   username: string;
   name: string;
@@ -9,6 +8,4 @@
   xp: number;
   level: number;
   lives: number;
-  streak?: number;
-  created_at?: string;
 }
