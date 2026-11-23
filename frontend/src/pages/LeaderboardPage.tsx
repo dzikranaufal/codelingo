@@ -3,7 +3,8 @@ import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatsBar from "../components/StatsBar";
 import { LeagueShield } from "../components/ProfileIcons";
-import { ME_USERNAME, leaderboard, myStats } from "../data/mockData";
+import { ME_USERNAME, leaderboard } from "../data/mockData";
+import { useMyStats } from "../hooks/useMyStats";
 import "./pageShell.css";
 import "./LeaderboardPage.css";
 
@@ -16,6 +17,7 @@ const rows = [...leaderboard].sort((a, b) => b.xp - a.xp);
 
 export default function LeaderboardPage() {
   const navigate = useNavigate();
+  const myStats = useMyStats();
   // Status emoji milik pengguna. null = kosong.
   // SEMENTARA: belum disimpan ke backend, jadi hilang saat halaman dimuat ulang.
   const [status, setStatus] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export default function LeaderboardPage() {
       </div>
 
       <aside className="shell__side">
-        <StatsBar stats={myStats} />
+        {myStats && <StatsBar stats={myStats} />}
 
         <section className="panel status">
           <h3>Pasang statusmu</h3>

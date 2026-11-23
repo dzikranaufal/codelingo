@@ -10,9 +10,19 @@ import CoursesPage from "./pages/CoursesPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import AchievementsPage from "./pages/AchievementsPage";
+import LessonSessionPage from "./pages/LessonSessionPage";
 import Sidebar from "./components/Sidebar";
 import AdminApp from "./admin/AdminApp";
 import "./App.css";
+
+// Halaman yang butuh login: tanpa token, arahkan ke /login.
+// (Token yang kedaluwarsa ditangani interceptor 401 di services/api.ts.)
+function RequireAuth({ children }: { children: ReactNode }) {
+  if (!localStorage.getItem("token")) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+}
 
 // Layout halaman dengan sidebar di kiri dan konten di kanan
 function SidebarLayout({
@@ -41,52 +51,72 @@ export default function App() {
         <Route
           path="/belajar"
           element={
-            <SidebarLayout>
-              <LearnPage />
-            </SidebarLayout>
+            <RequireAuth>
+              <SidebarLayout>
+                <LearnPage />
+              </SidebarLayout>
+            </RequireAuth>
           }
         />
 
         {/* Sesi kuis: layar penuh, tanpa sidebar */}
+        <Route
+          path="/belajar/pelajaran/:lessonId"
+          element={
+            <RequireAuth>
+              <LessonSessionPage />
+            </RequireAuth>
+          }
+        />
 
         <Route
           path="/kursus"
           element={
-            <SidebarLayout>
-              <CoursesPage />
-            </SidebarLayout>
+            <RequireAuth>
+              <SidebarLayout>
+                <CoursesPage />
+              </SidebarLayout>
+            </RequireAuth>
           }
         />
         <Route
           path="/papan-skor"
           element={
-            <SidebarLayout defaultActive="Papan Skor">
-              <LeaderboardPage />
-            </SidebarLayout>
+            <RequireAuth>
+              <SidebarLayout defaultActive="Papan Skor">
+                <LeaderboardPage />
+              </SidebarLayout>
+            </RequireAuth>
           }
         />
         <Route
           path="/pengguna/:username"
           element={
-            <SidebarLayout defaultActive="Papan Skor">
-              <UserProfilePage />
-            </SidebarLayout>
+            <RequireAuth>
+              <SidebarLayout defaultActive="Papan Skor">
+                <UserProfilePage />
+              </SidebarLayout>
+            </RequireAuth>
           }
         />
         <Route
           path="/pengguna/:username/pencapaian"
           element={
-            <SidebarLayout defaultActive="Papan Skor">
-              <AchievementsPage />
-            </SidebarLayout>
+            <RequireAuth>
+              <SidebarLayout defaultActive="Papan Skor">
+                <AchievementsPage />
+              </SidebarLayout>
+            </RequireAuth>
           }
         />
         <Route
           path="/profile"
           element={
-            <SidebarLayout defaultActive="Profil">
-              <ProfilePage />
-            </SidebarLayout>
+            <RequireAuth>
+              <SidebarLayout defaultActive="Profil">
+                <ProfilePage />
+              </SidebarLayout>
+            </RequireAuth>
           }
         />
 

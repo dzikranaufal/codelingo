@@ -10,6 +10,7 @@ export type PathNode = {
   id: string;
   type: NodeType;
   status: NodeStatus;
+  title?: string; // judul pelajaran, dipakai untuk tooltip dan aria-label
   mascot?: boolean; // true = logo CodeLingo tampil di samping node ini
 };
 
@@ -145,7 +146,8 @@ export default function LessonPath({ units, onSelectNode }: LessonPathProps) {
                   <button
                     type="button"
                     className={`path-node path-node--${node.type} path-node--${node.status}`}
-                    aria-label={`${TYPE_LABEL[node.type]}, ${STATUS_LABEL[node.status]}`}
+                    aria-label={`${TYPE_LABEL[node.type]}${node.title ? ` ${node.title}` : ""}, ${STATUS_LABEL[node.status]}`}
+                    title={node.title}
                     aria-disabled={node.status === "locked" ? true : undefined}
                     onClick={(e) => handleClick(e, node, unit)}
                     onAnimationEnd={(e) => e.currentTarget.classList.remove("is-pressed")}

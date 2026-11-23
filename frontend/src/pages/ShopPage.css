@@ -1,0 +1,340 @@
+/* frontend/src/pages/ShopPage.css */
+.shop {
+  padding-top: 24px;
+}
+
+/* Banner paket keluarga */
+.promo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px;
+  overflow: hidden;
+  border: 2px solid #e5e5e5;
+  border-radius: 20px;
+  background: #fff;
+  color: #3c3c3c;
+}
+
+.promo-banner__text h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 900;
+  color: #3c3c3c;
+}
+
+.promo-banner__text p {
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #777;
+}
+
+.promo-banner__btn {
+  padding: 14px 32px;
+  border: 0;
+  border-bottom: 4px solid #cfd6dc;
+  border-radius: 14px;
+  background: #fff;
+  color: #1b1745;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.promo-banner__btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.promo-banner__art img {
+  display: block;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+/* Judul bagian */
+.shop__title {
+  margin: 36px 0 14px;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.shop__title--spaced {
+  margin-top: 48px;
+}
+
+/* Daftar barang */
+.shop__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid #e5e5e5;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.shop-item:last-child {
+  border-bottom: 0;
+}
+
+.shop-item__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+}
+
+.shop-item__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.shop-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-item__body h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.shop-item__body p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #777;
+}
+
+.shop-tag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: #e5e5e5;
+  color: #afafaf;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* Tombol di tiap barang */
+.shop-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 170px;
+  padding: 14px 20px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  background: #fff;
+  color: #1cb0f6;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.shop-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.shop-btn--plus {
+  color: #c34fe0;
+}
+
+.shop-btn--off,
+.shop-btn:disabled {
+  color: #afafaf;
+  cursor: not-allowed;
+}
+
+.shop-btn__gem {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.shop-btn__gem svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Kartu di panel kanan */
+.side-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.side-card__head h3 {
+  margin: 0;
+}
+
+.side-card__head a {
+  color: #1cb0f6;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.side-card__quest {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.league-note {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.league-note img {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.league-note p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.friends-streak {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff9600, #ff6a00);
+  color: #fff;
+}
+
+.friends-streak img {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.friends-streak b {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.friends-streak button {
+  padding: 10px 18px;
+  border: 0;
+  border-bottom: 3px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fff;
+  color: #ff6a00;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sultan {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+}
+
+.sultan__icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.sultan__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sultan b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 17px;
+}
+
+.sultan p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #777;
+}
+
+.side-btn {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-bottom: 4px solid #1899d6;
+  border-radius: 14px;
+  background: #1cb0f6;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.side-btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+@media (max-width: 560px) {
+  .promo-banner__art {
+    display: none;
+  }
+
+  .shop-item {
+    flex-wrap: wrap;
+  }
+
+  .shop-btn {
+    width: 100%;
+  }
+}

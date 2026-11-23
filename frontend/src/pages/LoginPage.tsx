@@ -74,9 +74,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="button" className="forgot-btn" onClick={() => navigate("/forgot-password")}>
-              FORGOT?
-            </button>
+            {/* "Lupa password" belum ada endpoint backend-nya, jadi tombolnya belum ditampilkan */}
           </div>
 
           {error && <p className="login-error" role="alert">{error}</p>}

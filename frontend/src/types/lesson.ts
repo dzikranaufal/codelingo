@@ -51,6 +51,7 @@ export interface Lesson {
   id: string;
   title: string;
   xpReward: number;
+  hearts: number; // sisa nyawa saat pelajaran dibuka (dari backend)
   steps: LessonStep[];
 }
 
@@ -60,6 +61,7 @@ export type AnswerValue = string[] | number;
 export interface AnswerResult {
   correct: boolean;
   correctAnswer: string;
+  explanation: string;
   hearts: number;
 }
 

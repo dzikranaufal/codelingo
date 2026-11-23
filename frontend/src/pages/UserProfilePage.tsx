@@ -6,7 +6,8 @@ import Modal from "../components/Modal";
 import AchievementBadge from "../components/AchievementBadge";
 import { languages } from "../components/LanguageIcons";
 import { BoltIcon, ChevronIcon, FlameIcon, LeagueShield, MedalIcon } from "../components/ProfileIcons";
-import { ME_USERNAME, WEEK_DAYS, getProfile, myStats, type Achievement } from "../data/mockData";
+import { ME_USERNAME, WEEK_DAYS, getProfile, type Achievement } from "../data/mockData";
+import { useMyStats } from "../hooks/useMyStats";
 import profileImg from "../assets/profile.png";
 import followersImg from "../assets/pengikut.png";
 import "./pageShell.css";
@@ -95,6 +96,7 @@ export default function UserProfilePage() {
 
   const [tab, setTab] = useState<"following" | "followers">("following");
   const [showLangs, setShowLangs] = useState(false);
+  const myStats = useMyStats();
   const [badge, setBadge] = useState<Achievement | null>(null);
 
   // Laporan: pop-up, alasan terpilih, dan akun yang baru dilaporkan
@@ -265,7 +267,7 @@ export default function UserProfilePage() {
       </div>
 
       <aside className="shell__side">
-        <StatsBar stats={myStats} />
+        {myStats && <StatsBar stats={myStats} />}
 
         <section className="panel follow">
           <div className="follow__tabs" role="tablist">

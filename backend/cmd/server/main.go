@@ -12,6 +12,7 @@ import (
 	"codelingo/backend/internal/adminauth"
 	"codelingo/backend/internal/auth"
 	"codelingo/backend/internal/config"
+	"codelingo/backend/internal/content"
 	"codelingo/backend/internal/database"
 	"codelingo/backend/internal/leaderboard"
 	"codelingo/backend/internal/middleware"
@@ -19,7 +20,6 @@ import (
 	"codelingo/backend/internal/profile"
 	"codelingo/backend/internal/admin"
 
-	// "codelingo/backend/internal/content"
 
 	"gorm.io/gorm"
 )
@@ -68,6 +68,13 @@ func main() {
 	profileHandler := &profile.Handler{Service: &profile.Service{DB: db}}
 	mux.Handle("/api/v1/profile", authenticate(http.HandlerFunc(profileHandler.Profile)))
 	mux.Handle("/api/v1/profile/password", authenticate(http.HandlerFunc(profileHandler.Password)))
+
+	// Belajar (khusus pelajar): jalur belajar, isi pelajaran, jawaban, statistik
+	requireLearner := middleware.RequireRole(models.RoleUser)
+	contentHandler := &content.Handler{Service: &content.Service{DB: db}}
+	mux.Handle("/api/v1/learning-path", authenticate(requireLearner(http.HandlerFunc(contentHandler.Path))))
+	mux.Handle("/api/v1/lessons/", authenticate(requireLearner(http.HandlerFunc(contentHandler.LessonRoutes))))
+	mux.Handle("/api/v1/me/stats", authenticate(requireLearner(http.HandlerFunc(contentHandler.Stats))))
 
 	// Papan skor
 	leaderboardHandler := &leaderboard.Handler{Service: &leaderboard.Service{DB: db}}
@@ -138,7 +145,7 @@ func cors(next http.Handler) http.Handler {
 		if allowedOrigins[origin] {
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Add("Vary", "Origin")
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		}
 

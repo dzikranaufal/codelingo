@@ -1,0 +1,298 @@
+/* frontend/src/pages/CharacterPage.css */
+/* Semua kelas diawali "kr-" supaya tidak bentrok dengan CSS halaman lain (misalnya .chip di LandingPage.css). */
+
+.kr {
+  padding-top: 24px;
+}
+.kr__title {
+  margin: 0 0 6px;
+  font-size: 30px;
+  font-weight: 900;
+}
+.kr__sub {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #777;
+}
+
+/* Pencarian */
+.kr__search {
+  width: 100%;
+  height: 50px;
+  padding: 0 18px;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+  background: #f7f7f7;
+  color: #3c3c3c;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+}
+.kr__search:focus {
+  outline: none;
+  border-color: #1cb0f6;
+  background: #fff;
+}
+
+/* Filter kategori */
+.kr__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 20px;
+}
+.kr-filter {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 8px 14px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  background: #fff;
+  color: #777;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.kr-filter span {
+  margin-left: 4px;
+  color: #afafaf;
+}
+.kr-filter[aria-pressed="true"] {
+  border-color: #84d8ff;
+  background: #ddf4ff;
+  color: #1cb0f6;
+}
+.kr-filter[aria-pressed="true"] span {
+  color: #1cb0f6;
+}
+.kr-filter:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Kartu rangkuman */
+.kr__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.kr-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  background: #fff;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.kr-card:hover {
+  background: #f7f7f7;
+}
+.kr-card:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.kr-symbol {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #e6f6ff;
+  color: #1899d6;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 15px;
+  font-weight: 800;
+  word-break: break-all;
+}
+.kr-symbol--lg {
+  font-size: 18px;
+}
+.kr-card__name {
+  font-size: 17px;
+  font-weight: 900;
+}
+.kr-card__meaning {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: #777;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+/* Label untuk kartu tambahan (bisa dimatikan lewat SHOW_ADDED_TAG di CharacterPage.tsx) */
+.kr-tag {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #fff3b0;
+  color: #8a6d00;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.kr__empty {
+  padding: 40px 0;
+  text-align: center;
+  color: #777;
+  font-weight: 700;
+}
+
+/* Panel "Siap berlatih?" */
+.kr-ready p {
+  margin: 0 0 16px;
+  color: #555;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.kr-ready__btn {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-bottom: 4px solid #58a700;
+  border-radius: 14px;
+  background: #58cc02;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.kr-ready__btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* ---------- Pop-up rangkuman ---------- */
+.kr-detail {
+  padding: 44px 28px 24px;
+}
+.kr-detail__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.kr-detail__name {
+  margin: 14px 0 16px;
+  font-size: 26px;
+  font-weight: 900;
+}
+.kr-detail__label,
+.kr-detail__labelrow {
+  margin: 18px 0 8px;
+  color: #afafaf;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.kr-detail__labelrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.kr-detail__meaning {
+  margin: 0;
+  color: #3c3c3c;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.kr-detail__copy {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1cb0f6;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.kr-code,
+.kr-out {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border-radius: 12px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre;
+}
+.kr-code {
+  background: #1f2933;
+  color: #e6edf3;
+}
+.kr-out {
+  border: 2px solid #e5e5e5;
+  background: #f7f7f7;
+  color: #3c3c3c;
+}
+.kr-detail__note {
+  margin: 8px 0 0;
+  color: #777;
+  font-size: 14px;
+  font-weight: 700;
+}
+.kr-detail__tip {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff8e1;
+  color: #6b5200;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.kr-detail__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 2px solid #e5e5e5;
+  color: #afafaf;
+  font-weight: 800;
+}
+.kr-detail__nav button {
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  color: #1cb0f6;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.kr-detail__nav button:disabled {
+  color: #d4d4d4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 560px) {
+  .kr__grid {
+    grid-template-columns: 1fr;
+  }
+  .kr-detail {
+    padding: 44px 18px 20px;
+  }
+}

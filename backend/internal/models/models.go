@@ -42,8 +42,11 @@ type User struct {
 	XP        int       `gorm:"not null;default:0;check:chk_users_xp,xp >= 0" json:"xp"`
 	Level     int       `gorm:"not null;default:1;check:chk_users_level,level >= 1" json:"level"`
 	Lives     int       `gorm:"not null;default:5;check:chk_users_lives,lives >= 0" json:"lives"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	// LivesUpdatedAt = patokan waktu regenerasi nyawa (1 nyawa per 30 menit).
+	// NULL pada akun lama dianggap "sekarang". Lihat internal/content/rules.go.
+	LivesUpdatedAt *time.Time `gorm:"index" json:"-"`
+	CreatedAt      time.Time  `json:"created_at"`
+	UpdatedAt      time.Time  `json:"updated_at"`
 }
 
 

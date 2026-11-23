@@ -6,7 +6,6 @@ import type { AnswerValue, CompleteResult, Lesson, LessonStep } from "../types/l
 import { StepView, isInteractive } from "../components/LessonSteps";
 import "./LessonSessionPage.css";
 
-const START_HEARTS = 5; // nilai awal; setelah jawaban pertama diganti nilai dari backend
 const PRAISE = ["Benar!", "Mantap!", "Keren!"];
 
 interface QueueItem {
@@ -28,12 +27,13 @@ function LessonSession({ lesson, onRetry }: { lesson: Lesson; onRetry: () => voi
     lesson.steps.map((s) => ({ step: s, key: s.id }))
   );
   const [index, setIndex] = useState(0);
-  const [hearts, setHearts] = useState(START_HEARTS);
+  const [hearts, setHearts] = useState(lesson.hearts); // nilai awal dari backend
   const [status, setStatus] = useState<"idle" | "correct" | "wrong">("idle");
   const [answer, setAnswer] = useState<AnswerValue | null>(null);
   const [checking, setChecking] = useState(false);
   const [checkError, setCheckError] = useState("");
   const [correctText, setCorrectText] = useState("");
+  const [explanation, setExplanation] = useState("");
   const [choiceMark, setChoiceMark] = useState<{ right: number | null; wrong: number | null }>({
     right: null,
     wrong: null,
@@ -81,6 +81,7 @@ function LessonSession({ lesson, onRetry }: { lesson: Lesson; onRetry: () => voi
       const res = await submitAnswer(lesson.id, current.step.id, answer);
       setHearts(res.hearts);
       setCorrectText(res.correctAnswer);
+      setExplanation(res.explanation);
       if (current.step.type === "choice" && typeof answer === "number") {
         setChoiceMark({ right: res.correct ? answer : null, wrong: res.correct ? null : answer });
       }
@@ -112,6 +113,7 @@ function LessonSession({ lesson, onRetry }: { lesson: Lesson; onRetry: () => voi
     setStatus("idle");
     setAnswer(null);
     setCorrectText("");
+    setExplanation("");
     setCheckError("");
     setChoiceMark({ right: null, wrong: null });
   };
@@ -189,6 +191,9 @@ function LessonSession({ lesson, onRetry }: { lesson: Lesson; onRetry: () => voi
           <div className="ls-feedback">
             {checkError && <span style={{ color: "#ea2b2b" }}>{checkError}</span>}
             {status === "correct" && <strong>{PRAISE[completed % PRAISE.length]}</strong>}
+            {status !== "idle" && explanation && (
+              <span style={{ display: "block", fontSize: 14, fontWeight: 400 }}>{explanation}</span>
+            )}
             {status === "wrong" && (
               <>
                 <strong>Jawaban benar:</strong>

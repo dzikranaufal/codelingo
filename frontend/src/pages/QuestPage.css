@@ -1,0 +1,212 @@
+/* frontend/src/pages/QuestsPage.css */
+.quests {
+  padding-top: 24px;
+}
+
+/* Banner ungu */
+.quests__banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 220px;
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #ce82ff;
+}
+.quests__banner-text {
+  position: relative;
+  z-index: 1;
+  max-width: 280px;
+}
+.quests__banner h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+.quests__banner p {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.quests__arch {
+  position: absolute;
+  right: -30px;
+  bottom: -90px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: #e6bfff;
+}
+.quests__logo {
+  position: relative;
+  z-index: 1;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+
+/* Kepala bagian + penghitung waktu */
+.quests__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 32px 0 14px;
+}
+.quests__head h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+}
+.quests__timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ff9600;
+  font-size: 17px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.quests__timer svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Daftar misi */
+.quests__list {
+  padding: 0 20px;
+}
+.quest {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 2px solid #e5e5e5;
+}
+.quest:last-child {
+  border-bottom: 0;
+}
+.quest__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+}
+.quest__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.quest__body {
+  flex: 1;
+  min-width: 0;
+}
+.quest__body h3 {
+  margin: 0 0 12px;
+  font-size: 19px;
+  font-weight: 900;
+}
+.quest__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.quest__bar {
+  position: relative;
+  flex: 1;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #e5e5e5;
+}
+.quest__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #ffc800;
+}
+.quest__label {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  color: #777;
+  font-size: 15px;
+  font-weight: 800;
+}
+.quest__chest {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+}
+.quest__chest svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Kartu tantangan bulanan */
+.monthly {
+  position: relative;
+  padding-right: 120px;
+}
+.monthly__coin {
+  position: absolute;
+  top: 12px;
+  right: 8px;
+  width: 104px;
+  height: 104px;
+}
+.monthly__coin svg {
+  width: 100%;
+  height: 100%;
+}
+.monthly h3 {
+  font-size: 18px;
+  line-height: 1.4;
+}
+.monthly p {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #555;
+}
+.monthly__btn {
+  width: calc(100% + 100px);
+  padding: 14px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  background: #fff;
+  color: #1cb0f6;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.monthly__btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+@media (max-width: 560px) {
+  .quests__logo {
+    display: none;
+  }
+  .monthly {
+    padding-right: 20px;
+  }
+  .monthly__coin {
+    display: none;
+  }
+  .monthly__btn {
+    width: 100%;
+  }
+}

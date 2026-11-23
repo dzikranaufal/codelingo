@@ -14,4 +14,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Token kedaluwarsa/tidak valid di endpoint terproteksi: hapus token lalu ke login.
+// Endpoint /auth/* dikecualikan karena 401 di sana artinya email/password salah.
+api.interceptors.response.use(
+  (res) => res,
+  (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      const url = error.config?.url ?? "";
+      if (!url.startsWith("/auth/") && !url.startsWith("/admin/auth/")) {
+        localStorage.removeItem("token");
+        if (window.location.pathname !== "/login") {
+          window.location.assign("/login");
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

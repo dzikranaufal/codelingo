@@ -1,70 +1,50 @@
 // frontend/src/pages/LearnPage.tsx
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import LessonPath, { type PathNode, type PathUnit } from "../components/LessonPath";
 import StatsBar, { type Stats } from "../components/StatsBar";
+import { getLearningPath } from "../services/pathService";
+import { getMyStatsDTO, toBarStats } from "../services/statsService";
+import { getMyRank } from "../services/leaderboardService";
+import type { LearningPath, LessonStatus } from "../types/path";
 import Maskot2 from "../assets/maskot2.png";
 import "./LearnPage.css";
 
-// DATA SEMENTARA (contoh). Nanti diganti data dari backend (Tahap 5 dan 6).
-// Status pelajaran, hati, permata, runtunan harus ditentukan backend, bukan frontend.
-//
-// PENTING: id node bertipe "lesson" harus sama dengan id lesson di database.
-// Ganti "1", "2", "3" di bawah dengan id lesson asli dari tabel lesson (phpMyAdmin).
-const units: PathUnit[] = [
-  {
-    id: "unit-1",
-    section: "Bagian 1, Unit 1",
-    title: "Halo, Dunia!",
-    color: "green",
-    nodes: [
-      { id: "1", type: "lesson", status: "current" },
-      { id: "2", type: "lesson", status: "done" },
-      { id: "1-3", type: "chest", status: "done", mascot: true },
-      { id: "3", type: "lesson", status: "done" },
-      { id: "1-5", type: "trophy", status: "locked" },
-    ],
-  },
-  {
-    id: "unit-2",
-    section: "Bagian 1, Unit 2",
-    title: "Variabel dan tipe data",
-    color: "blue",
-    nodes: [
-      { id: "2-1", type: "lesson", status: "locked" },
-      { id: "2-2", type: "lesson", status: "locked" },
-      { id: "2-3", type: "lesson", status: "locked" },
-      { id: "2-4", type: "chest", status: "locked" },
-      { id: "2-5", type: "lesson", status: "locked" },
-      { id: "2-6", type: "trophy", status: "locked" },
-    ],
-  },
-  {
-    id: "unit-3",
-    section: "Bagian 1, Unit 3",
-    title: "Percabangan if-else",
-    color: "purple",
-    nodes: [
-      { id: "3-1", type: "lesson", status: "locked" },
-      { id: "3-2", type: "lesson", status: "locked" },
-      { id: "3-3", type: "lesson", status: "locked" },
-      { id: "3-4", type: "lesson", status: "locked" },
-      { id: "3-5", type: "trophy", status: "locked" },
-    ],
-  },
-];
-
-// DATA SEMENTARA untuk bar atas
-const stats: Stats = {
-  courseId: "c", // bahasa yang sedang dipelajari
-  streak: 0,
-  gems: 500,
-  hearts: 4,
-  maxHearts: 5,
-  nextHeartIn: "4 jam",
+const NODE_STATUS: Record<LessonStatus, PathNode["status"]> = {
+  completed: "done",
+  current: "current",
+  locked: "locked",
 };
 
-// DATA SEMENTARA untuk kartu papan skor
-const leaderboard = { rank: 11, league: "Perak" };
+// Jalur belajar dari backend (tabel learning_paths + lessons + progress).
+// Status tiap pelajaran dihitung backend; frontend hanya menampilkannya.
+function toUnits(data: LearningPath): PathUnit[] {
+  if (!data.path || data.lessons.length === 0) return [];
+  return [
+    {
+      id: `path-${data.path.id}`,
+      section: `Jalur ${data.language.name}`,
+      title: data.path.name,
+      color: "green",
+      nodes: data.lessons.map((l) => ({
+        id: String(l.id),
+        type: "lesson" as const,
+        status: NODE_STATUS[l.status],
+        title: l.title,
+        mascot: false,
+      })),
+    },
+  ];
+}
+
+function errorMessage(err: unknown): string {
+  if (axios.isAxiosError(err)) {
+    if (!err.response) return "Tidak dapat terhubung ke server. Coba lagi nanti.";
+    return err.response.data?.error ?? "Gagal memuat jalur belajar.";
+  }
+  return "Terjadi kesalahan yang tidak diketahui.";
+}
 
 function ShieldBadge() {
   return (
@@ -75,24 +55,95 @@ function ShieldBadge() {
   );
 }
 
+const stateStyle = { padding: 24, textAlign: "center" as const };
+
 export default function LearnPage() {
   const navigate = useNavigate();
+  const [data, setData] = useState<LearningPath | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [rank, setRank] = useState<number | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getLearningPath()
+      .then((d) => {
+        if (cancelled) return;
+        setData(d);
+        setError("");
+      })
+      .catch((err) => {
+        if (!cancelled) setError(errorMessage(err));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    // Statistik dan peringkat hanya pelengkap: kalau gagal, kartunya disembunyikan.
+    getMyStatsDTO()
+      .then((d) => {
+        if (!cancelled) setStats(toBarStats(d));
+      })
+      .catch(() => {
+        /* abaikan */
+      });
+    getMyRank()
+      .then((r) => {
+        if (!cancelled) setRank(r);
+      })
+      .catch(() => {
+        /* abaikan */
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [reloadKey]);
 
   const handleSelectNode = (node: PathNode) => {
     if (node.status === "locked") return; // node terkunci tidak bisa dibuka
-    if (node.type !== "lesson") return; // peti dan ujian belum punya sesi
+    if (node.type !== "lesson") return;
     navigate(`/belajar/pelajaran/${node.id}`);
   };
+
+  const retry = () => {
+    setLoading(true);
+    setReloadKey((k) => k + 1);
+  };
+
+  const units = data ? toUnits(data) : [];
 
   return (
     <div className="learn-page">
       <div className="learn-page__main">
-        <LessonPath units={units} onSelectNode={handleSelectNode} />
+        {loading && <p style={stateStyle}>Memuat jalur belajar...</p>}
+
+        {!loading && error && (
+          <div style={stateStyle}>
+            <p role="alert">{error}</p>
+            <button type="button" className="btn btn--outline" onClick={retry}>
+              Coba lagi
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && data && !data.language.is_available && (
+          <p style={stateStyle}>Materi bahasa {data.language.name} segera hadir.</p>
+        )}
+
+        {!loading && !error && data?.language.is_available && units.length === 0 && (
+          <p style={stateStyle}>Belum ada pelajaran di jalur ini.</p>
+        )}
+
+        {units.length > 0 && <LessonPath units={units} onSelectNode={handleSelectNode} />}
       </div>
 
       {/* Panel kanan: statistik + 2 kartu (Plus dan Papan Skor) */}
       <aside className="learn-page__side">
-        <StatsBar stats={stats} />
+        {stats && <StatsBar stats={stats} />}
 
         <section className="card plus">
           <div className="plus__text">
@@ -106,21 +157,21 @@ export default function LearnPage() {
           </button>
         </section>
 
-        <section className="card board">
-          <p className="card__eyebrow">Papan skor</p>
-          <div className="board__row">
-            <div>
-              <h3>Selamat!</h3>
-              <p>
-                Kamu meraih peringkat #{leaderboard.rank} dan maju ke Liga {leaderboard.league}
-              </p>
+        {rank !== null && (
+          <section className="card board">
+            <p className="card__eyebrow">Papan skor</p>
+            <div className="board__row">
+              <div>
+                <h3>Peringkat #{rank}</h3>
+                <p>Kumpulkan XP dari pelajaran untuk naik peringkat.</p>
+              </div>
+              <ShieldBadge />
             </div>
-            <ShieldBadge />
-          </div>
-          <button type="button" className="btn btn--outline">
-            Ke papan skor
-          </button>
-        </section>
+            <button type="button" className="btn btn--outline" onClick={() => navigate("/papan-skor")}>
+              Ke papan skor
+            </button>
+          </section>
+        )}
       </aside>
     </div>
   );

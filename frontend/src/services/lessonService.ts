@@ -59,6 +59,7 @@ export async function getLesson(lessonId: string): Promise<Lesson> {
     id: String(d.id),
     title: d.title ?? "",
     xpReward: d.xp_reward ?? d.xpReward ?? 0,
+    hearts: Number(d.hearts ?? 0),
     steps: (d.steps ?? []).map(normalizeStep),
   };
 }
@@ -76,6 +77,7 @@ export async function submitAnswer(
   return {
     correct: Boolean(d.correct),
     correctAnswer: String(d.correct_answer ?? d.correctAnswer ?? ""),
+    explanation: String(d.explanation ?? ""),
     hearts: Number(d.hearts ?? 0),
   };
 }
