@@ -10,6 +10,8 @@ export interface MyStats {
   next_heart_in: string;
   xp: number;
   level: number;
+  gems: number;
+  streak_freezes: number;
 }
 
 export async function getMyStatsDTO(): Promise<MyStats> {
@@ -18,12 +20,11 @@ export async function getMyStatsDTO(): Promise<MyStats> {
 }
 
 // Bentuk yang dipakai komponen StatsBar.
-// gems = 0: fitur permata/toko belum ada di backend.
 export function toBarStats(d: MyStats): Stats {
   return {
     courseId: d.course_id,
     streak: d.streak,
-    gems: 0,
+    gems: d.gems,
     hearts: d.hearts,
     maxHearts: d.max_hearts,
     nextHeartIn: d.next_heart_in || undefined,

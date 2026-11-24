@@ -1,44 +1,98 @@
 // frontend/src/pages/ShopPage.tsx
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import StatsBar from "../components/StatsBar";
 import { FreezeIcon, GemIcon, HeartBigIcon, InfinityHeartIcon, LockIcon } from "../components/ShopIcons";
 import logo from "../assets/logo.png";
-import { myStats } from "../data/mockData";
+import { useMyStats } from "../hooks/useMyStats";
+import { getMyRank } from "../services/leaderboardService";
+import { getQuests } from "../services/questService";
+import { apiErrorMessage } from "../services/errors";
+import { getShop, purchase } from "../services/shopService";
+import type { QuestItem } from "../types/quest";
+import type { ShopItem, ShopResponse } from "../types/shop";
 import "./pageShell.css";
 import "./ShopPage.css";
 
-// DATA SEMENTARA. Harga, stok power-up, dan hasil pembelian harus ditentukan
-// dan divalidasi backend (Tahap 6), bukan dihitung di frontend.
-const HEART_REFILL_COST = 350;
-const FREEZE_COST = 600;
-const FREEZE_ACTIVE = 0;
-const FREEZE_MAX = 2;
-
+// Harga, stok, dan validasi pembelian ditentukan backend (GET /shop).
 export default function ShopPage() {
   const navigate = useNavigate();
+  const baseStats = useMyStats();
+  const [shop, setShop] = useState<ShopResponse | null>(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [rank, setRank] = useState<number | null>(null);
+  const [quest, setQuest] = useState<QuestItem | null>(null);
 
-  const heartsFull = myStats.hearts >= myStats.maxHearts;
-  const canRefill = !heartsFull && myStats.gems >= HEART_REFILL_COST;
-  const canBuyFreeze = FREEZE_ACTIVE < FREEZE_MAX && myStats.gems >= FREEZE_COST;
+  useEffect(() => {
+    let cancelled = false;
+    getShop()
+      .then((d) => !cancelled && setShop(d))
+      .catch((e) => !cancelled && setError(apiErrorMessage(e, "Gagal memuat toko.")));
+    // Kartu samping hanya pelengkap: kalau gagal, cukup tidak tampil.
+    getMyRank()
+      .then((r) => !cancelled && setRank(r))
+      .catch(() => {});
+    getQuests()
+      .then((d) => !cancelled && setQuest(d.quests.find((q) => !q.completed) ?? d.quests[0] ?? null))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const item = (id: ShopItem["id"]) => shop?.items.find((i) => i.id === id);
+  const refill = item("heart_refill");
+  const freeze = item("streak_freeze");
+
+  // Bar statistik ikut angka terbaru dari toko setelah pembelian.
+  const barStats = useMemo(
+    () => (baseStats && shop ? { ...baseStats, gems: shop.gems, hearts: shop.hearts } : baseStats),
+    [baseStats, shop],
+  );
+
+  const buy = async (id: ShopItem["id"]) => {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      setShop(await purchase(id));
+    } catch (e) {
+      setError(apiErrorMessage(e, "Pembelian gagal. Coba lagi."));
+      // Sinkronkan ulang bila server menolak karena data sudah berubah.
+      getShop().then(setShop).catch(() => {});
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const canBuy = (i?: ShopItem) => !!i && i.state === "ok" && !busy;
 
   return (
     <div className="shell">
       <div className="shell__main shop">
-        {/* Banner paket keluarga */}
+        {/* Banner paket keluarga: fitur CodeLingo Plus belum tersedia */}
         <section className="promo-banner">
           <div className="promo-banner__text">
             <h2>Paket Sharing!</h2>
             <p>
               Lebih hemat belajar dengan <b>CodeLingo Plus</b> bersama teman-teman
             </p>
-            <button type="button" className="promo-banner__btn">
-              Lebih lanjut
+            <button type="button" className="promo-banner__btn" disabled>
+              Segera hadir
             </button>
           </div>
           <div className="promo-banner__art">
             <img src={logo} alt="" />
           </div>
         </section>
+
+        {error && (
+          <p role="alert" className="shop__title">
+            {error}
+          </p>
+        )}
+        {!shop && !error && <p>Memuat…</p>}
 
         {/* Hati */}
         <h2 className="shop__title">Hati</h2>
@@ -51,13 +105,17 @@ export default function ShopPage() {
               <h3>Isi Ulang Hati</h3>
               <p>Dapatkan hati penuh agar kamu tidak takut membuat kesalahan dalam pelajaran.</p>
             </div>
-            {/* Belum tersambung backend */}
-            <button type="button" className={`shop-btn${canRefill ? "" : " shop-btn--off"}`} disabled={!canRefill}>
-              {heartsFull ? (
+            <button
+              type="button"
+              className={`shop-btn${canBuy(refill) ? "" : " shop-btn--off"}`}
+              disabled={!canBuy(refill)}
+              onClick={() => buy("heart_refill")}
+            >
+              {refill?.state === "full" ? (
                 "Penuh"
               ) : (
                 <>
-                  Tukar: <span className="shop-btn__gem"><GemIcon /></span> {HEART_REFILL_COST}
+                  Tukar: <span className="shop-btn__gem"><GemIcon /></span> {refill?.cost ?? "–"}
                 </>
               )}
             </button>
@@ -71,8 +129,8 @@ export default function ShopPage() {
               <h3>Hati Tak Terbatas</h3>
               <p>Takkan lagi kehabisan hati bersama CodeLingo Plus!</p>
             </div>
-            <button type="button" className="shop-btn shop-btn--plus">
-              Coba gratis
+            <button type="button" className="shop-btn shop-btn--off" disabled>
+              Segera hadir
             </button>
           </li>
         </ul>
@@ -88,30 +146,45 @@ export default function ShopPage() {
               <h3>
                 Pembeku Runtunan
                 <span className="shop-tag">
-                  {FREEZE_ACTIVE} / {FREEZE_MAX} aktif
+                  {freeze?.owned ?? 0} / {freeze?.max ?? 0} dimiliki
                 </span>
               </h3>
               <p>Pembeku Runtunan mencegah runtunanmu hilang meskipun tidak beraktivitas selama sehari penuh.</p>
             </div>
-            <button type="button" className={`shop-btn${canBuyFreeze ? "" : " shop-btn--off"}`} disabled={!canBuyFreeze}>
-              Tukar: <span className="shop-btn__gem"><GemIcon /></span> {FREEZE_COST}
+            <button
+              type="button"
+              className={`shop-btn${canBuy(freeze) ? "" : " shop-btn--off"}`}
+              disabled={!canBuy(freeze)}
+              onClick={() => buy("streak_freeze")}
+            >
+              {freeze?.state === "max_owned" ? (
+                "Maksimal"
+              ) : (
+                <>
+                  Tukar: <span className="shop-btn__gem"><GemIcon /></span> {freeze?.cost ?? "–"}
+                </>
+              )}
             </button>
           </li>
         </ul>
       </div>
 
       <aside className="shell__side">
-        <StatsBar stats={myStats} />
+        {barStats && <StatsBar stats={barStats} />}
 
-        {/* Kartu liga */}
+        {/* Kartu papan skor */}
         <section className="panel side-card">
           <header className="side-card__head">
-            <h3>Liga Emas</h3>
-            <Link to="/papan-skor">Lihat liga</Link>
+            <h3>Papan Skor</h3>
+            <Link to="/papan-skor">Lihat papan skor</Link>
           </header>
           <div className="league-note">
             <img src={logo} alt="" />
-            <p>Selesaikan satu pelajaran untuk bersaing dengan para pelajar lain di papan skor minggu ini</p>
+            <p>
+              {rank
+                ? `Kamu di peringkat #${rank} minggu ini. Kumpulkan XP untuk naik peringkat.`
+                : "Selesaikan satu pelajaran untuk bersaing dengan para pelajar lain di papan skor minggu ini"}
+            </p>
           </div>
         </section>
 
@@ -122,15 +195,11 @@ export default function ShopPage() {
             <Link to="/misi">Lihat semua</Link>
           </header>
 
-          <p className="side-card__quest">Dapatkan 10 XP</p>
-          <div className="friends-streak">
-            <img src={logo} alt="" />
-            <div>
-              <b>0 Runtunan Teman aktif</b>
-              {/* Belum ada halaman daftar teman */}
-              <button type="button">Lihat daftar</button>
-            </div>
-          </div>
+          {quest && (
+            <p className="side-card__quest">
+              {quest.title} ({quest.progress}/{quest.target})
+            </p>
+          )}
 
           <div className="sultan">
             <span className="sultan__icon">

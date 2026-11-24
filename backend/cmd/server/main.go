@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"codelingo/backend/internal/admin"
 	"codelingo/backend/internal/adminauth"
 	"codelingo/backend/internal/auth"
 	"codelingo/backend/internal/config"
@@ -18,8 +19,8 @@ import (
 	"codelingo/backend/internal/middleware"
 	"codelingo/backend/internal/models"
 	"codelingo/backend/internal/profile"
-	"codelingo/backend/internal/admin"
-
+	"codelingo/backend/internal/quest"
+	"codelingo/backend/internal/shop"
 
 	"gorm.io/gorm"
 )
@@ -56,8 +57,10 @@ func main() {
 		DB:        db,
 		JWTSecret: []byte(cfg.JWTSecret),
 	}
+
 	handler := &auth.Handler{Service: service}
 	mux := http.NewServeMux()
+
 	mux.HandleFunc("/api/v1/auth/register", handler.Register)
 	mux.HandleFunc("/api/v1/auth/login", handler.Login)
 
@@ -65,43 +68,78 @@ func main() {
 	requireAdmin := middleware.RequireRole(models.RoleAdmin)
 
 	// Profil
-	profileHandler := &profile.Handler{Service: &profile.Service{DB: db}}
+	profileHandler := &profile.Handler{
+		Service: &profile.Service{DB: db},
+	}
+
 	mux.Handle("/api/v1/profile", authenticate(http.HandlerFunc(profileHandler.Profile)))
 	mux.Handle("/api/v1/profile/password", authenticate(http.HandlerFunc(profileHandler.Password)))
 
-	// Belajar (khusus pelajar): jalur belajar, isi pelajaran, jawaban, statistik
+	// Belajar (khusus pelajar)
 	requireLearner := middleware.RequireRole(models.RoleUser)
-	contentHandler := &content.Handler{Service: &content.Service{DB: db}}
+
+	contentHandler := &content.Handler{
+		Service: &content.Service{DB: db},
+	}
+
 	mux.Handle("/api/v1/learning-path", authenticate(requireLearner(http.HandlerFunc(contentHandler.Path))))
 	mux.Handle("/api/v1/lessons/", authenticate(requireLearner(http.HandlerFunc(contentHandler.LessonRoutes))))
 	mux.Handle("/api/v1/me/stats", authenticate(requireLearner(http.HandlerFunc(contentHandler.Stats))))
 
 	// Papan skor
-	leaderboardHandler := &leaderboard.Handler{Service: &leaderboard.Service{DB: db}}
+	leaderboardHandler := &leaderboard.Handler{
+		Service: &leaderboard.Service{DB: db},
+	}
+
 	mux.Handle("/api/v1/leaderboard", authenticate(http.HandlerFunc(leaderboardHandler.List)))
+	mux.Handle("/api/v1/leaderboard/status", authenticate(requireLearner(http.HandlerFunc(leaderboardHandler.SetStatus))))
+
+	// Toko dan misi
+	shopHandler := &shop.Handler{
+		Service: &shop.Service{DB: db},
+	}
+
+	mux.Handle("/api/v1/shop", authenticate(requireLearner(http.HandlerFunc(shopHandler.Shop))))
+	mux.Handle("/api/v1/shop/purchase", authenticate(requireLearner(http.HandlerFunc(shopHandler.Purchase))))
+
+	questHandler := &quest.Handler{
+		Service: &quest.Service{DB: db},
+	}
+
+	mux.Handle("/api/v1/quests", authenticate(requireLearner(http.HandlerFunc(questHandler.List))))
+	mux.Handle("/api/v1/quests/", authenticate(requireLearner(http.HandlerFunc(questHandler.Claim))))
 
 	// Login dan sesi admin
-	adminAuthHandler := &adminauth.Handler{Service: &adminauth.Service{DB: db, JWTSecret: []byte(cfg.JWTSecret)}}
+	adminAuthHandler := &adminauth.Handler{
+		Service: &adminauth.Service{
+			DB:        db,
+			JWTSecret: []byte(cfg.JWTSecret),
+		},
+	}
+
 	mux.HandleFunc("/api/v1/admin/auth/login", adminAuthHandler.Login)
 	mux.Handle("/api/v1/admin/me", authenticate(requireAdmin(http.HandlerFunc(adminAuthHandler.Me))))
 
-	// Kelola konten (khusus admin)
-	adminContent := &admin.Handler{Service: &admin.Service{DB: db}}
+	// Kelola konten dan akun (khusus admin)
+	adminContent := &admin.Handler{
+		Service: &admin.Service{DB: db},
+	}
+
+	mux.Handle("/api/v1/admin/stats", authenticate(requireAdmin(http.HandlerFunc(adminContent.Stats))))
+	mux.Handle("/api/v1/admin/languages", authenticate(requireAdmin(http.HandlerFunc(adminContent.Languages))))
 	mux.Handle("/api/v1/admin/learning-paths", authenticate(requireAdmin(http.HandlerFunc(adminContent.Paths))))
 	mux.Handle("/api/v1/admin/learning-paths/", authenticate(requireAdmin(http.HandlerFunc(adminContent.PathRoutes))))
 	mux.Handle("/api/v1/admin/lessons/", authenticate(requireAdmin(http.HandlerFunc(adminContent.LessonRoutes))))
 	mux.Handle("/api/v1/admin/questions/", authenticate(requireAdmin(http.HandlerFunc(adminContent.QuestionRoutes))))
-	mux.Handle("/api/v1/admin/languages", authenticate(requireAdmin(http.HandlerFunc(adminContent.Languages))))
 	mux.Handle("/api/v1/admin/users", authenticate(requireAdmin(http.HandlerFunc(adminContent.Users))))
 	mux.Handle("/api/v1/admin/users/", authenticate(requireAdmin(http.HandlerFunc(adminContent.UserRoutes))))
-	mux.Handle("/api/v1/admin/stats", authenticate(requireAdmin(http.HandlerFunc(adminContent.Stats))))
 
+	// Health check
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"status":"ok"}`))
 	})
-
 
 	server := &http.Server{
 		Addr:              ":" + cfg.ServerPort,
@@ -113,6 +151,7 @@ func main() {
 	}
 
 	log.Printf("Codelingo API berjalan di http://localhost:%s", cfg.ServerPort)
+
 	if err := server.ListenAndServe(); err != nil &&
 		!errors.Is(err, http.ErrServerClosed) {
 		log.Fatalf("server gagal: %v", err)
@@ -154,6 +193,7 @@ func cors(next http.Handler) http.Handler {
 				http.Error(w, "origin tidak diizinkan", http.StatusForbidden)
 				return
 			}
+
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}

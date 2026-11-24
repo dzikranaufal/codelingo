@@ -58,10 +58,24 @@ func NextHeartIn(lives int, anchor, now time.Time) time.Duration {
 
 const dayKeyLayout = "2006-01-02"
 
-// Streak menghitung jumlah hari beruntun yang punya aktivitas.
-// dayKeys berisi tanggal "YYYY-MM-DD" (boleh duplikat, urutan bebas).
-// Streak masih hidup jika hari ini ATAU kemarin ada aktivitas.
+// Streak = StreakWithFreezes tanpa Pembeku Runtunan.
 func Streak(dayKeys []string, today time.Time) int {
+	n, _ := StreakWithFreezes(dayKeys, today, 0)
+	return n
+}
+
+// StreakWithFreezes menghitung runtunan hari beruntun.
+// dayKeys berisi tanggal "YYYY-MM-DD" hari aktif (termasuk hari yang sudah
+// dibekukan sebelumnya; boleh duplikat, urutan bebas).
+//
+// Runtunan masih hidup jika hari ini ATAU kemarin aktif. Satu hari bolong yang
+// diapit hari aktif ditutup memakai satu Pembeku (maks. `freezes` buah); hari
+// itu ikut dihitung. Dua hari bolong beruntun memutus runtunan.
+//
+// Mengembalikan runtunan dan daftar hari yang BARU dibekukan pada perhitungan
+// ini. Pemanggil wajib menyimpannya dan mengurangi stok Pembeku, supaya
+// perhitungan berikutnya konsisten.
+func StreakWithFreezes(dayKeys []string, today time.Time, freezes int) (int, []string) {
 	active := make(map[string]bool, len(dayKeys))
 	for _, k := range dayKeys {
 		active[k] = true
@@ -70,17 +84,49 @@ func Streak(dayKeys []string, today time.Time) int {
 	day := today
 	if !active[day.Format(dayKeyLayout)] {
 		day = day.AddDate(0, 0, -1)
-		if !active[day.Format(dayKeyLayout)] {
-			return 0
-		}
 	}
 
 	n := 0
-	for active[day.Format(dayKeyLayout)] {
-		n++
-		day = day.AddDate(0, 0, -1)
+	var used []string
+	for {
+		k := day.Format(dayKeyLayout)
+		if active[k] {
+			n++
+			day = day.AddDate(0, 0, -1)
+			continue
+		}
+		prev := day.AddDate(0, 0, -1)
+		if len(used) < freezes && active[prev.Format(dayKeyLayout)] {
+			used = append(used, k)
+			n++
+			day = prev
+			continue
+		}
+		break
 	}
-	return n
+	return n, used
+}
+
+// DayStart = 00:00 pada hari yang sama dengan t (zona waktu t).
+func DayStart(t time.Time) time.Time {
+	y, m, d := t.Date()
+	return time.Date(y, m, d, 0, 0, 0, 0, t.Location())
+}
+
+// WeekStart = Senin 00:00 pada pekan t. Pekan berjalan Senin sampai Minggu.
+func WeekStart(t time.Time) time.Time {
+	d := DayStart(t)
+	return d.AddDate(0, 0, -((int(d.Weekday()) + 6) % 7))
+}
+
+// DaysLeftInWeek = sisa hari sampai pekan berganti (dibulatkan ke atas, minimal 1).
+func DaysLeftInWeek(t time.Time) int {
+	left := WeekStart(t).AddDate(0, 0, 7).Sub(t)
+	days := int((left + 24*time.Hour - 1) / (24 * time.Hour))
+	if days < 1 {
+		days = 1
+	}
+	return days
 }
 
 // Attempt = catatan satu jawaban, dipakai untuk menghitung skor.

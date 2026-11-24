@@ -27,6 +27,9 @@ func All() []interface{} {
 		&UserAchievement{},
 		&Language{},
 		&UserLanguage{},
+		&XPEvent{},
+		&StreakFreezeDay{},
+		&QuestClaim{},
 	}
 }
 
@@ -45,8 +48,49 @@ type User struct {
 	// LivesUpdatedAt = patokan waktu regenerasi nyawa (1 nyawa per 30 menit).
 	// NULL pada akun lama dianggap "sekarang". Lihat internal/content/rules.go.
 	LivesUpdatedAt *time.Time `gorm:"index" json:"-"`
-	CreatedAt      time.Time  `json:"created_at"`
-	UpdatedAt      time.Time  `json:"updated_at"`
+	// Gems = permata (mata uang toko). Didapat dari pelajaran dan hadiah misi,
+	// dipakai di toko. Hanya backend yang boleh mengubahnya.
+	Gems int `gorm:"not null;default:0;check:chk_users_gems,gems >= 0" json:"-"`
+	// StreakFreezes = jumlah Pembeku Runtunan yang dimiliki (maks. 2).
+	StreakFreezes int `gorm:"not null;default:0;check:chk_users_streak_freezes,streak_freezes >= 0" json:"-"`
+	// StatusEmoji = status di papan skor. Kosong = tanpa status. Nilai yang boleh
+	// ada di internal/leaderboard/status.go.
+	StatusEmoji string    `gorm:"size:16;not null;default:''" json:"-"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+// XPEvent = buku besar XP: satu baris setiap kali user mendapat XP. users.xp tetap
+// menjadi total, tabel ini dipakai untuk peringkat mingguan dan misi harian.
+type XPEvent struct {
+	ID       uint   `gorm:"primaryKey" json:"id"`
+	UserID   uint   `gorm:"not null;index:idx_xp_events_user_created,priority:1" json:"user_id"`
+	Amount   int    `gorm:"not null;check:chk_xp_events_amount,amount > 0" json:"amount"`
+	Source   string `gorm:"size:30;not null" json:"source"` // mis. "lesson"
+	SourceID *uint  `json:"source_id"`
+	// CreatedAt juga diindeks sendiri untuk query rentang waktu lintas user.
+	CreatedAt time.Time `gorm:"not null;index:idx_xp_events_user_created,priority:2;index:idx_xp_events_created" json:"created_at"`
+
+	User User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
+}
+
+// StreakFreezeDay = hari yang "dibekukan": dihitung aktif untuk runtunan walau
+// user tidak belajar. Dibuat otomatis saat Pembeku Runtunan terpakai.
+type StreakFreezeDay struct {
+	UserID uint      `gorm:"primaryKey;autoIncrement:false" json:"user_id"`
+	Day    time.Time `gorm:"primaryKey;type:date;autoIncrement:false" json:"day"`
+
+	User User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
+}
+
+// QuestClaim = hadiah misi harian yang sudah diklaim. Kunci utama gabungan
+// mencegah klaim ganda untuk misi dan hari yang sama.
+type QuestClaim struct {
+	UserID  uint      `gorm:"primaryKey;autoIncrement:false" json:"user_id"`
+	QuestID string    `gorm:"primaryKey;size:30" json:"quest_id"`
+	Day     time.Time `gorm:"primaryKey;type:date;autoIncrement:false" json:"day"`
+
+	User User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
 }
 
 

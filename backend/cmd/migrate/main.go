@@ -5,7 +5,6 @@ import (
 
 	"codelingo/backend/internal/config"
 	"codelingo/backend/internal/database"
-	
 )
 
 func main() {
@@ -25,6 +24,9 @@ func main() {
 	}
 	if err := database.Backfill(db); err != nil {
 		log.Fatalf("backfill gagal: %v", err)
+	}
+	if err := database.BackfillXPEvents(db); err != nil {
+		log.Fatalf("backfill XP gagal: %v", err)
 	}
 
 	log.Println("migrasi selesai")

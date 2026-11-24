@@ -32,11 +32,11 @@ type SidebarProps = {
 // Isi "path" kalau halaman tujuannya sudah ada di App.tsx.
 const menuItems: MenuItem[] = [
   { label: "Belajar", icon: <HomeIcon />, path: "/belajar" },
-  { label: "Karakter", icon: <CodeTileIcon /> },
+  { label: "Karakter", icon: <CodeTileIcon />, path: "/karakter" },
   { label: "Latihan", icon: <DumbbellIcon /> },
   { label: "Papan Skor", icon: <ShieldIcon />, path: "/papan-skor" },
-  { label: "Misi", icon: <ChestIcon /> },
-  { label: "Toko", icon: <StoreIcon /> },
+  { label: "Misi", icon: <ChestIcon />, path: "/misi" },
+  { label: "Toko", icon: <StoreIcon />, path: "/toko" },
   { label: "Profil", icon: "A", path: "/profile", variant: "round" },
   { label: "Lainnya", icon: <MoreIcon /> },
 ];

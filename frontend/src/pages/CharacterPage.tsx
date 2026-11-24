@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import StatsBar from "../components/StatsBar";
 import Modal from "../components/Modal";
 import { C_CATEGORIES, C_ENTRIES, type CCategory, type CEntry } from "../data/cSyntax";
-import { myStats } from "../data/mockData";
+import { useMyStats } from "../hooks/useMyStats";
 import "./pageShell.css";
 import "./CharacterPage.css";
 
@@ -78,6 +78,7 @@ function EntryDetail({ entry, position, total, onPrev, onNext }: DetailProps) {
 /* ---------- Halaman ---------- */
 export default function CharacterPage() {
   const navigate = useNavigate();
+  const myStats = useMyStats();
   const [cat, setCat] = useState<CCategory | "semua">("semua");
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
@@ -150,7 +151,7 @@ export default function CharacterPage() {
       </div>
 
       <aside className="shell__side">
-        <StatsBar stats={myStats} />
+        {myStats && <StatsBar stats={myStats} />}
 
         <section className="panel kr-ready">
           <h3>Siap berlatih?</h3>
