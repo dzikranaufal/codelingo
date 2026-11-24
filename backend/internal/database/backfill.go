@@ -52,3 +52,21 @@ func Backfill(db *gorm.DB) error {
 		return nil
 	})
 }
+
+// BackfillXPEvents membuat satu baris buku besar XP untuk user lama yang sudah
+// punya XP tetapi belum punya riwayat xp_events. Baris diberi tanggal lama
+// (2000-01-01) supaya XP lama tidak dihitung sebagai XP minggu ini maupun misi
+// hari ini. Aman dijalankan berulang: user yang sudah punya riwayat dilewati.
+func BackfillXPEvents(db *gorm.DB) error {
+	res := db.Exec(`
+		INSERT INTO xp_events (user_id, amount, source, created_at)
+		SELECT u.id, u.xp, 'backfill', '2000-01-01 00:00:00'
+		FROM users u
+		WHERE u.xp > 0
+		  AND NOT EXISTS (SELECT 1 FROM xp_events e WHERE e.user_id = u.id)`)
+	if res.Error != nil {
+		return res.Error
+	}
+	log.Printf("backfill: %d user lama dibuatkan riwayat XP", res.RowsAffected)
+	return nil
+}

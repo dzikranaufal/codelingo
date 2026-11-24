@@ -1,6 +1,6 @@
-// frontend/src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
+
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -14,19 +14,22 @@ import ShopPage from "./pages/ShopPage";
 import QuestPage from "./pages/QuestPage";
 import CharacterPage from "./pages/CharacterPage";
 import LessonSessionPage from "./pages/LessonSessionPage";
+
 import Sidebar from "./components/Sidebar";
+import AdminApp from "./admin/AdminApp";
+
 import "./App.css";
 
-// Halaman yang butuh login: tanpa token, arahkan ke /login.
-// (Token yang kedaluwarsa ditangani interceptor 401 di services/api.ts.)
+// Halaman yang membutuhkan login
 function RequireAuth({ children }: { children: ReactNode }) {
   if (!localStorage.getItem("token")) {
     return <Navigate to="/login" replace />;
   }
+
   return <>{children}</>;
 }
 
-// Layout halaman dengan sidebar di kiri dan konten di kanan
+// Layout halaman dengan sidebar
 function SidebarLayout({
   children,
   defaultActive = "Belajar",
@@ -49,6 +52,9 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        {/* Admin */}
+        <Route path="/admin/*" element={<AdminApp />} />
 
         <Route
           path="/belajar"
@@ -81,6 +87,7 @@ export default function App() {
             </RequireAuth>
           }
         />
+
         <Route
           path="/papan-skor"
           element={
@@ -91,6 +98,7 @@ export default function App() {
             </RequireAuth>
           }
         />
+
         <Route
           path="/pengguna/:username"
           element={
@@ -101,6 +109,7 @@ export default function App() {
             </RequireAuth>
           }
         />
+
         <Route
           path="/pengguna/:username/pencapaian"
           element={
@@ -111,6 +120,7 @@ export default function App() {
             </RequireAuth>
           }
         />
+
         <Route
           path="/toko"
           element={
@@ -148,6 +158,39 @@ export default function App() {
             <RequireAuth>
               <SidebarLayout defaultActive="Profil">
                 <ProfilePage />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/karakter"
+          element={
+            <RequireAuth>
+              <SidebarLayout defaultActive="Karakter">
+                <CharacterPage />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/misi"
+          element={
+            <RequireAuth>
+              <SidebarLayout defaultActive="Misi">
+                <QuestPage />
+              </SidebarLayout>
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/toko"
+          element={
+            <RequireAuth>
+              <SidebarLayout defaultActive="Toko">
+                <ShopPage />
               </SidebarLayout>
             </RequireAuth>
           }

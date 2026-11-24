@@ -1,54 +1,83 @@
-import { useEffect, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import StatsBar from "../components/StatsBar";
 import { BoltIcon } from "../components/ProfileIcons";
-import { ClockIcon, CodeTileBlueIcon, CoinIcon, QuestChestIcon, TargetIcon } from "../components/ShopIcons";
+import {
+  ClockIcon,
+  CodeTileBlueIcon,
+  CoinIcon,
+  QuestChestIcon,
+} from "../components/ShopIcons";
 import logo from "../assets/logo.png";
 import { useMyStats } from "../hooks/useMyStats";
-import { getMyMissions } from "../services/missionService";
-import type { MissionItem } from "../types/mission";
+import { apiErrorMessage } from "../services/errors";
+import { claimQuest, getQuests } from "../services/questService";
+import type { QuestResponse } from "../types/quest";
 import "./pageShell.css";
 import "./QuestPage.css";
 
-const icons: Record<string, ReactNode> = {
-  xp: <BoltIcon />,
-  lesson: <TargetIcon />,
-  practice: <CodeTileBlueIcon />,
+const ICONS: Record<string, ReactNode> = {
+  daily_lesson: <CodeTileBlueIcon />,
+  daily_xp_20: <BoltIcon />,
+  daily_xp_50: <BoltIcon />,
 };
 
-export default function QuestsPage() {
+function hoursUntil(iso: string): number {
+  const ms = new Date(iso).getTime() - Date.now();
+  return Math.max(1, Math.ceil(ms / 3_600_000));
+}
+
+export default function QuestPage() {
   const navigate = useNavigate();
-  const myStats = useMyStats();
-  const [missions, setMissions] = useState<MissionItem[]>([]);
-  const [resetAt, setResetAt] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [now, setNow] = useState(Date.now());
+  const baseStats = useMyStats();
 
-  async function loadMissions() {
-    try {
-      setError(null);
-      const data = await getMyMissions();
-      setMissions(data.missions);
-      setResetAt(data.reset_at);
-    } catch {
-      setError("Misi belum dapat dimuat. Periksa koneksi lalu coba lagi.");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [data, setData] = useState<QuestResponse | null>(null);
+  const [error, setError] = useState("");
+  const [claiming, setClaiming] = useState<string | null>(null);
 
-  useEffect(() => { void loadMissions(); }, []);
   useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
-    return () => window.clearInterval(timer);
+    let cancelled = false;
+
+    getQuests()
+      .then((d) => {
+        if (!cancelled) setData(d);
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setError(apiErrorMessage(e, "Gagal memuat misi."));
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const done = missions.filter((mission) => mission.completed).length;
-  const remainingMs = resetAt ? Math.max(0, new Date(resetAt).getTime() - now) : 0;
-  const hoursLeft = Math.floor(remainingMs / 3_600_000);
-  const minutesLeft = Math.floor((remainingMs % 3_600_000) / 60_000);
+  const barStats = useMemo(
+    () => (baseStats && data ? { ...baseStats, gems: data.gems } : baseStats),
+    [baseStats, data],
+  );
+
+  const claim = async (id: string) => {
+    if (claiming) return;
+
+    setClaiming(id);
+    setError("");
+
+    try {
+      setData(await claimQuest(id));
+    } catch (e) {
+      setError(apiErrorMessage(e, "Hadiah gagal diklaim."));
+      getQuests().then(setData).catch(() => {});
+    } finally {
+      setClaiming(null);
+    }
+  };
+
+  const quests = data?.quests ?? [];
+  const done = quests.filter((q) => q.completed).length;
 
   return (
     <div className="shell">
@@ -56,7 +85,9 @@ export default function QuestsPage() {
         <section className="quests__banner">
           <div className="quests__banner-text">
             <h1>Taklukkan misi, dapat hadiah!</h1>
-            <p>Kamu telah menaklukkan <b>{done} dari {missions.length}</b> misi hari ini.</p>
+            <p>
+              Kamu telah menaklukkan <b>{done} dari {quests.length}</b> misi hari ini.
+            </p>
           </div>
           <span className="quests__arch" aria-hidden="true" />
           <img src={logo} alt="" className="quests__logo" />
@@ -64,46 +95,103 @@ export default function QuestsPage() {
 
         <div className="quests__head">
           <h2>Misi Harian</h2>
-          <span className="quests__timer"><ClockIcon /> {resetAt ? `${hoursLeft} jam ${minutesLeft} menit` : "--"}</span>
+          {data && (
+            <span className="quests__timer">
+              <ClockIcon /> {hoursUntil(data.resets_at)} jam
+            </span>
+          )}
         </div>
 
-        {loading && <p role="status">Memuat progres misi...</p>}
-        {error && <div role="alert"><p>{error}</p><button type="button" onClick={() => { setLoading(true); void loadMissions(); }}>Coba lagi</button></div>}
-        {!loading && !error && (
-          <>
-            <p role="note">Progres dihitung dari aktivitas belajar yang tersimpan di database. Reset harian menggunakan zona waktu UTC.</p>
-            <section className="panel quests__list">
-              {missions.map((mission) => {
-                const pct = Math.min(100, (mission.current / mission.target) * 100);
-                return (
-                  <article key={mission.id} className="quest">
-                    <span className="quest__icon">{icons[mission.id] ?? <TargetIcon />}</span>
-                    <div className="quest__body">
-                      <h3>{mission.title}</h3>
-                      <div className="quest__row">
-                        <div className="quest__bar" role="progressbar" aria-valuemin={0} aria-valuemax={mission.target} aria-valuenow={mission.current}>
-                          <span className="quest__fill" style={{ width: `${pct}%` }} />
-                          <span className="quest__label">{mission.current} / {mission.target}</span>
-                        </div>
-                        <span className="quest__chest"><QuestChestIcon /></span>
+        {error && <p role="alert">{error}</p>}
+        {!data && !error && <p role="status">Memuat...</p>}
+
+        {data && (
+          <section className="panel quests__list">
+            {quests.map((q) => {
+              const pct = Math.min(100, (q.progress / q.target) * 100);
+              const canClaim = q.completed && !q.claimed;
+
+              return (
+                <article key={q.id} className="quest">
+                  <span className="quest__icon">
+                    {ICONS[q.id] ?? <BoltIcon />}
+                  </span>
+
+                  <div className="quest__body">
+                    <h3>{q.title}</h3>
+
+                    <div className="quest__row">
+                      <div
+                        className="quest__bar"
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={q.target}
+                        aria-valuenow={q.progress}
+                      >
+                        <span
+                          className="quest__fill"
+                          style={{ width: `${pct}%` }}
+                        />
+                        <span className="quest__label">
+                          {q.progress} / {q.target}
+                        </span>
                       </div>
-                      {mission.completed && <small>Target tercapai</small>}
+
+                      <button
+                        type="button"
+                        className="quest__chest"
+                        style={{
+                          background: "none",
+                          border: 0,
+                          padding: 0,
+                          cursor: canClaim ? "pointer" : "default",
+                          opacity: q.claimed || !q.completed ? 0.45 : 1,
+                        }}
+                        disabled={!canClaim || claiming !== null}
+                        onClick={() => claim(q.id)}
+                        aria-label={
+                          q.claimed
+                            ? "Hadiah sudah diklaim"
+                            : canClaim
+                              ? `Klaim ${q.reward_gems} permata`
+                              : "Selesaikan misi untuk membuka hadiah"
+                        }
+                        title={
+                          q.claimed
+                            ? "Sudah diklaim"
+                            : `Hadiah: ${q.reward_gems} permata`
+                        }
+                      >
+                        <QuestChestIcon />
+                      </button>
                     </div>
-                  </article>
-                );
-              })}
-            </section>
-          </>
+                  </div>
+                </article>
+              );
+            })}
+          </section>
         )}
       </div>
 
       <aside className="shell__side">
-        {myStats && <StatsBar stats={myStats} />}
+        {barStats && <StatsBar stats={barStats} />}
+
         <section className="panel monthly">
-          <span className="monthly__coin" aria-hidden="true"><CoinIcon /></span>
+          <span className="monthly__coin" aria-hidden="true">
+            <CoinIcon />
+          </span>
           <h3>Tantangan bulanan akan segera terbuka!</h3>
-          <p>Selesaikan tantangan setiap bulan untuk mendapatkan lencana eksklusif</p>
-          <button type="button" className="monthly__btn" onClick={() => navigate("/pelajaran/mulai")}>Mulai pelajaran</button>
+          <p>
+            Selesaikan tantangan setiap bulan untuk mendapatkan lencana
+            eksklusif
+          </p>
+          <button
+            type="button"
+            className="monthly__btn"
+            onClick={() => navigate("/belajar")}
+          >
+            Mulai pelajaran
+          </button>
         </section>
       </aside>
     </div>

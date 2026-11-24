@@ -108,3 +108,58 @@ func TestFormatWait(t *testing.T) {
 		}
 	}
 }
+
+func TestStreakWithFreezes(t *testing.T) {
+	today := time.Date(2026, 11, 23, 15, 0, 0, 0, time.UTC)
+	cases := []struct {
+		name     string
+		days     []string
+		freezes  int
+		wantN    int
+		wantUsed []string
+	}{
+		{"tanpa pembeku sama seperti Streak", []string{"2026-11-22", "2026-11-23"}, 0, 2, nil},
+		{"satu bolong ditutup", []string{"2026-11-23", "2026-11-21"}, 1, 3, []string{"2026-11-22"}},
+		{"bolong tanpa pembeku memutus", []string{"2026-11-23", "2026-11-21"}, 0, 1, nil},
+		{"dua bolong beruntun tidak bisa ditutup", []string{"2026-11-23", "2026-11-20"}, 2, 1, nil},
+		{"kemarin bolong, hari ini belum belajar, ditutup", []string{"2026-11-21", "2026-11-20"}, 1, 3, []string{"2026-11-22"}},
+		{"stok habis di bolong kedua", []string{"2026-11-23", "2026-11-21", "2026-11-19"}, 1, 3, []string{"2026-11-22"}},
+		{"dua pembeku, dua bolong terpisah", []string{"2026-11-23", "2026-11-21", "2026-11-19"}, 2, 5, []string{"2026-11-22", "2026-11-20"}},
+		{"runtunan sudah putus lama, pembeku tidak dipakai", []string{"2026-11-10"}, 2, 0, nil},
+		{"hari beku sebelumnya dihitung aktif", []string{"2026-11-23", "2026-11-22", "2026-11-21"}, 2, 3, nil},
+	}
+	for _, c := range cases {
+		n, used := StreakWithFreezes(c.days, today, c.freezes)
+		if n != c.wantN || len(used) != len(c.wantUsed) {
+			t.Errorf("%s: dapat (%d, %v), mau (%d, %v)", c.name, n, used, c.wantN, c.wantUsed)
+			continue
+		}
+		for i := range used {
+			if used[i] != c.wantUsed[i] {
+				t.Errorf("%s: hari beku %v, mau %v", c.name, used, c.wantUsed)
+			}
+		}
+	}
+}
+
+func TestWeekBoundaries(t *testing.T) {
+	// 23 Nov 2026 = Senin
+	mon := time.Date(2026, 11, 23, 10, 30, 0, 0, time.UTC)
+	if got := WeekStart(mon); !got.Equal(time.Date(2026, 11, 23, 0, 0, 0, 0, time.UTC)) {
+		t.Errorf("WeekStart Senin = %v", got)
+	}
+	sun := time.Date(2026, 11, 29, 23, 59, 0, 0, time.UTC)
+	if got := WeekStart(sun); !got.Equal(time.Date(2026, 11, 23, 0, 0, 0, 0, time.UTC)) {
+		t.Errorf("WeekStart Minggu = %v", got)
+	}
+	wed := time.Date(2026, 11, 25, 12, 0, 0, 0, time.UTC)
+	if got := DaysLeftInWeek(wed); got != 5 { // Rabu 12:00 -> Senin 00:00 = 4,5 hari
+		t.Errorf("DaysLeftInWeek Rabu = %d, mau 5", got)
+	}
+	if got := DaysLeftInWeek(sun); got != 1 {
+		t.Errorf("DaysLeftInWeek Minggu malam = %d, mau 1", got)
+	}
+	if got := DaysLeftInWeek(time.Date(2026, 11, 23, 0, 0, 0, 0, time.UTC)); got != 7 {
+		t.Errorf("DaysLeftInWeek Senin 00:00 = %d, mau 7", got)
+	}
+}

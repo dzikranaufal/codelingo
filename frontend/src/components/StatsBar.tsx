@@ -1,6 +1,6 @@
 // frontend/src/components/StatsBar.tsx
 import type { CSSProperties, ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { languages } from "./LanguageIcons";
 import "./StatsBar.css";
 
@@ -15,7 +15,6 @@ export type Stats = {
 
 // Urutan hari sesuai Date.getDay(): Minggu, Senin, Selasa, Rabu, Kamis, Jumat, Sabtu
 const WEEK = ["M", "S", "S", "R", "K", "J", "S"];
-const REFILL_COST = 350;
 
 /* ---------- Ikon ---------- */
 function FlameIcon({ on }: { on: boolean }) {
@@ -78,6 +77,7 @@ function Stat({
 }
 
 export default function StatsBar({ stats }: { stats: Stats }) {
+  const navigate = useNavigate();
   const course = languages.find((l) => l.id === stats.courseId) ?? languages[0];
   const today = new Date().getDay();
   const hasStreak = stats.streak > 0;
@@ -211,11 +211,12 @@ export default function StatsBar({ stats }: { stats: Stats }) {
           <span className="pop__option-text">Hati tak terbatas</span>
           <span className="pop__plus">Dapatkan Plus</span>
         </button>
-        <button type="button" className="pop__option" disabled={heartsFull}>
+        {/* Harga dan validasi pembelian ada di backend; tombol ini membuka toko */}
+        <button type="button" className="pop__option" disabled={heartsFull} onClick={() => navigate("/toko")}>
           <HeartIcon filled />
           <span className="pop__option-text">Isi ulang hati</span>
           <span className="pop__cost">
-            <GemIcon /> {REFILL_COST}
+            <GemIcon /> Toko
           </span>
         </button>
       </Stat>

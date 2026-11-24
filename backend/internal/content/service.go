@@ -90,9 +90,10 @@ type AnswerResponse struct {
 }
 
 type CompleteResponse struct {
-	XPGained int `json:"xp_gained"`
-	TotalXP  int `json:"total_xp"`
-	Level    int `json:"level"`
+	XPGained   int `json:"xp_gained"`
+	GemsGained int `json:"gems_gained"`
+	TotalXP    int `json:"total_xp"`
+	Level      int `json:"level"`
 }
 
 type StatsResponse struct {
@@ -104,6 +105,8 @@ type StatsResponse struct {
 	NextHeartIn        string `json:"next_heart_in"`
 	XP                 int    `json:"xp"`
 	Level              int    `json:"level"`
+	Gems               int    `json:"gems"`
+	StreakFreezes      int    `json:"streak_freezes"`
 }
 
 // ---------- helper ----------
@@ -584,15 +587,30 @@ func (s *Service) Complete(userID, lessonID uint) (*CompleteResponse, error) {
 		newXP := u.XP + gained
 		level := LevelForXP(newXP)
 
-		if gained > 0 {
+		now := s.now()
+
+		// Hadiah hanya pada penyelesaian pertama (alreadyDone = false).
+		gemsGained := 0
+		if !alreadyDone {
+			gemsGained = LessonGems
+		}
+		if gained > 0 || gemsGained > 0 {
 			err := tx.Model(&models.User{}).Where("id = ?", userID).
-				Updates(map[string]interface{}{"xp": newXP, "level": level}).Error
+				Updates(map[string]interface{}{
+					"xp": newXP, "level": level, "gems": gorm.Expr("gems + ?", gemsGained),
+				}).Error
 			if err != nil {
 				return internalErr("update xp", err)
 			}
 		}
+		if gained > 0 {
+			lid := lessonID
+			ev := models.XPEvent{UserID: userID, Amount: gained, Source: "lesson", SourceID: &lid, CreatedAt: now}
+			if err := tx.Omit(clause.Associations).Create(&ev).Error; err != nil {
+				return internalErr("save xp event", err)
+			}
+		}
 
-		now := s.now()
 		pathID := acc.path.ID
 		var ul models.UserLanguage
 		err = tx.Where("user_id = ? AND language_id = ?", userID, acc.language.ID).Take(&ul).Error
@@ -617,7 +635,7 @@ func (s *Service) Complete(userID, lessonID uint) (*CompleteResponse, error) {
 			}
 		}
 
-		resp = &CompleteResponse{XPGained: gained, TotalXP: newXP, Level: level}
+		resp = &CompleteResponse{XPGained: gained, GemsGained: gemsGained, TotalXP: newXP, Level: level}
 		return nil
 	})
 	if err != nil {
@@ -639,19 +657,40 @@ func (s *Service) Stats(userID uint) (*StatsResponse, error) {
 		return nil, err
 	}
 
+	since := now.AddDate(-1, 0, -1)
 	var days []string
 	err = s.DB.Table("quiz_attempts").
-		Where("user_id = ? AND is_correct = ? AND created_at >= ?", userID, true, now.AddDate(-1, 0, -1)).
+		Where("user_id = ? AND is_correct = ? AND created_at >= ?", userID, true, since).
 		Distinct().
 		Pluck("DATE_FORMAT(created_at, '%Y-%m-%d')", &days).Error
 	if err != nil {
 		return nil, internalErr("load streak days", err)
 	}
+	var frozen []string
+	err = s.DB.Table("streak_freeze_days").
+		Where("user_id = ? AND day >= ?", userID, since).
+		Pluck("DATE_FORMAT(day, '%Y-%m-%d')", &frozen).Error
+	if err != nil {
+		return nil, internalErr("load frozen days", err)
+	}
+
+	streak, used := StreakWithFreezes(append(days, frozen...), now, u.StreakFreezes)
+	if len(used) > 0 {
+		// Hari yang ditutup Pembeku disimpan permanen dan stoknya dikurangi, supaya
+		// pembeku yang sama tidak terhitung dua kali.
+		n, err := s.consumeFreezes(userID, used, now.Location())
+		if err != nil {
+			return nil, err
+		}
+		u.StreakFreezes -= n
+	}
 
 	wait := NextHeartIn(u.Lives, anchor, now)
 	resp := &StatsResponse{
 		CourseID:           lang.Slug,
-		Streak:             Streak(days, now),
+		Streak:             streak,
+		Gems:               u.Gems,
+		StreakFreezes:      u.StreakFreezes,
 		Hearts:             u.Lives,
 		MaxHearts:          MaxLives,
 		NextHeartInSeconds: int(wait.Seconds()),
@@ -662,4 +701,45 @@ func (s *Service) Stats(userID uint) (*StatsResponse, error) {
 		resp.NextHeartIn = FormatWait(wait)
 	}
 	return resp, nil
+}
+
+// consumeFreezes menyimpan hari-hari yang ditutup Pembeku Runtunan dan
+// mengurangi stok sebanyak baris yang BENAR-BENAR baru tersimpan (request
+// paralel tidak bisa memotong stok dua kali untuk hari yang sama).
+// Mengembalikan jumlah pembeku yang terpakai.
+func (s *Service) consumeFreezes(userID uint, dayKeys []string, loc *time.Location) (int, error) {
+	used := 0
+	err := s.DB.Transaction(func(tx *gorm.DB) error {
+		var u models.User
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&u, userID).Error; err != nil {
+			return internalErr("lock user", err)
+		}
+		for _, key := range dayKeys {
+			if used >= u.StreakFreezes {
+				break
+			}
+			day, err := time.ParseInLocation(dayKeyLayout, key, loc)
+			if err != nil {
+				return internalErr("parse freeze day", err)
+			}
+			res := tx.Clauses(clause.OnConflict{DoNothing: true}).Omit(clause.Associations).
+				Create(&models.StreakFreezeDay{UserID: userID, Day: day})
+			if res.Error != nil {
+				return internalErr("save freeze day", res.Error)
+			}
+			used += int(res.RowsAffected)
+		}
+		if used > 0 {
+			err := tx.Model(&models.User{}).Where("id = ?", userID).
+				Update("streak_freezes", gorm.Expr("streak_freezes - ?", used)).Error
+			if err != nil {
+				return internalErr("decrease freezes", err)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	return used, nil
 }

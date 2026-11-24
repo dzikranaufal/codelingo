@@ -21,9 +21,9 @@ type PathSummary struct {
 func (s *Service) ListPaths() ([]PathSummary, error) {
 	var paths []PathSummary
 	err := s.DB.Table("learning_paths AS lp").
-		Select("lp.id AS id, lp.name AS name, lp.description AS description, "+
-			"lp.language_id AS language_id, COALESCE(lg.name, '') AS language_name, "+
-			"COALESCE(lg.is_available, 0) AS language_available, lp.order_index AS order_index, "+
+		Select("lp.id AS id, lp.name AS name, lp.description AS description, " +
+			"lp.language_id AS language_id, COALESCE(lg.name, '') AS language_name, " +
+			"COALESCE(lg.is_available, 0) AS language_available, lp.order_index AS order_index, " +
 			"(SELECT COUNT(*) FROM learning_path_lessons plp WHERE plp.learning_path_id = lp.id) AS lesson_count").
 		Joins("LEFT JOIN languages lg ON lg.id = lp.language_id").
 		Order("lg.name ASC, lp.order_index ASC, lp.id ASC").
@@ -49,4 +49,22 @@ func (h *Handler) Paths(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httpx.WriteJSON(w, http.StatusOK, map[string]any{"learning_paths": paths})
+}
+
+// Languages menangani GET /api/v1/admin/languages.
+func (h *Handler) Languages(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		httpx.MethodNotAllowed(w, http.MethodGet)
+		return
+	}
+
+	languages, err := h.Service.ListLanguages()
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+
+	httpx.WriteJSON(w, http.StatusOK, map[string]any{
+		"languages": languages,
+	})
 }
